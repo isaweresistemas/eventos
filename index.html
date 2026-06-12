@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Cache busting: v20260612_001 -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Isawere Eventos Pro</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -1585,6 +1589,36 @@ function showToast(msg, isErr) {
   clearTimeout(t._t);
   t._t = setTimeout(() => t.classList.remove('show'), 3200);
 }
+
+// ── CACHE BUSTER - Limpa cache antigo ao carregar ──
+(function() {
+  // Desregistra qualquer service worker antigo
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+  // Limpa todos os caches do browser
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      for (let name of names) {
+        caches.delete(name);
+      }
+    });
+  }
+  // Versão atual da aplicação
+  const APP_VERSION = '20260612_001';
+  const storedVersion = localStorage.getItem('app_version');
+  if (storedVersion !== APP_VERSION) {
+    localStorage.setItem('app_version', APP_VERSION);
+    // Se não é a primeira vez (tem versão antiga), recarrega forçado
+    if (storedVersion !== null) {
+      window.location.reload(true);
+    }
+  }
+})();
 
 // ── INIT ──────────────────────────────────────────
 (function() {
