@@ -733,7 +733,15 @@ document.addEventListener('click', refreshSession, { passive: true });
 document.addEventListener('keydown', refreshSession, { passive: true });
 
 // ── SHEETS CONFIG ─────────────────────────────────
-function loadSheetsCfg() { try { return JSON.parse(safeStorage.get(SHEETS_CFG_KEY)) || {}; } catch(e){ return {}; } }
+const DEFAULT_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzrhsHl0tTkTGy5nbV5LibhYOk0QBm9e8tS8J_yoK8i_zh2aaJshhTfy_U6nL70LWL8FA/exec';
+
+function loadSheetsCfg() {
+  try {
+    const saved = JSON.parse(safeStorage.get(SHEETS_CFG_KEY)) || {};
+    if (!saved.url) saved.url = DEFAULT_SHEETS_URL;
+    return saved;
+  } catch(e) { return { url: DEFAULT_SHEETS_URL }; }
+}
 function saveSheetsCfg(cfg) { safeStorage.set(SHEETS_CFG_KEY, JSON.stringify(cfg)); }
 
 function salvarConfigSheets() {
