@@ -8,500 +8,263 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 
 :root {
-  --ink: #0f172a;
-  --ink2: #334155;
-  --ink3: #64748b;
-  --surface: #ffffff;
-  --bg: #f8fafc;
-  --border: #e2e8f0;
-  --accent: #2563eb;
-  --accent2: #1d4ed8;
-  --green: #16a34a;
-  --green-bg: #dcfce7;
-  --red: #dc2626;
-  --red-bg: #fee2e2;
-  --amber: #d97706;
-  --amber-bg: #fef3c7;
-  --blue-bg: #eff6ff;
-  --radius: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.05);
-  --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+  --ink:#0f172a;--ink2:#334155;--ink3:#64748b;
+  --surface:#ffffff;--bg:#f8fafc;--border:#e2e8f0;
+  --accent:#2563eb;--accent2:#1d4ed8;
+  --green:#16a34a;--green-bg:#dcfce7;
+  --red:#dc2626;--red-bg:#fee2e2;
+  --amber:#d97706;--amber-bg:#fef3c7;
+  --blue-bg:#eff6ff;
+  --radius:12px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05);
+  --shadow-lg:0 8px 24px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;line-height:1.5;}
+
+/* LOGIN */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#2563eb 100%);padding:20px;}
+.login-box{background:#fff;border-radius:20px;padding:48px 40px;width:100%;max-width:460px;box-shadow:0 24px 64px rgba(0,0,0,.3);text-align:center;}
+.login-logo{font-size:48px;margin-bottom:12px;}
+.login-box h1{font-size:24px;font-weight:800;color:var(--ink);margin-bottom:4px;}
+.login-box .subtitle{color:var(--ink3);font-size:14px;margin-bottom:24px;}
+.input-wrap{position:relative;margin-bottom:12px;}
+.input-wrap input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:inherit;outline:none;transition:border-color .2s;}
+.input-wrap input:focus{border-color:var(--accent);}
+.operador-tag{background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--ink2);text-align:left;}
+.operador-tag strong{color:var(--accent);}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;border-radius:10px;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:all .18s;font-family:inherit;white-space:nowrap;}
+.btn-primary{background:var(--accent);color:#fff;width:100%;font-size:16px;padding:15px;}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.35);}
+.btn-secondary{background:var(--bg);color:var(--ink2);border:1.5px solid var(--border);}
+.btn-secondary:hover{background:var(--border);}
+.btn-green{background:var(--green);color:#fff;}
+.btn-green:hover{background:#15803d;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:hover{background:#b91c1c;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-icon{padding:10px 14px;font-size:15px;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+
+/* LAYOUT */
+#app{display:none;}
+.topbar{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);color:#fff;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.topbar-brand{font-size:18px;font-weight:800;display:flex;align-items:center;gap:10px;}
+.topbar-brand span{font-weight:300;opacity:.7;font-size:14px;}
+.topbar-info{font-size:12px;opacity:.6;margin-left:8px;}
+.topbar-actions{display:flex;gap:8px;align-items:center;}
+.sync-badge{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;letter-spacing:.04em;cursor:pointer;transition:all .2s;}
+.sync-online{background:rgba(22,163,74,.2);color:#4ade80;border:1px solid rgba(74,222,128,.3);}
+.sync-offline{background:rgba(217,119,6,.2);color:#fbbf24;border:1px solid rgba(251,191,36,.3);}
+.sync-syncing{background:rgba(37,99,235,.2);color:#60a5fa;border:1px solid rgba(96,165,250,.3);animation:pulse 1.2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+.nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;display:flex;gap:4px;flex-wrap:wrap;}
+.nav-btn{padding:12px 14px;border:none;background:none;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;font-family:inherit;display:flex;align-items:center;gap:6px;}
+.nav-btn:hover{color:var(--accent);}
+.nav-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600;}
+
+.main{padding:24px;max-width:1400px;margin:0 auto;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* CARDS */
+.card{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:16px;}
+.card-title{font-size:14px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px;}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+.stat-card{background:var(--surface);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow);}
+.stat-label{font-size:12px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;}
+.stat-value{font-size:36px;font-weight:800;color:var(--ink);line-height:1.1;margin:4px 0;font-family:'JetBrains Mono',monospace;}
+.stat-sub{font-size:12px;color:var(--ink3);}
+.stat-icon{font-size:28px;float:right;margin-top:-4px;}
+
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-group{margin-bottom:12px;}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em;}
+.form-group input,.form-group select{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:inherit;outline:none;background:var(--surface);color:var(--ink);transition:border-color .2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--accent);}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+
+/* VALIDAÇÃO */
+.validate-big input{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;text-align:center;text-transform:uppercase;letter-spacing:.15em;padding:18px;border:2.5px solid var(--border);}
+.validate-big input:focus{border-color:var(--accent);}
+.result-box{margin-top:16px;padding:20px;border-radius:12px;text-align:center;display:none;}
+.result-ok{background:var(--green-bg);border:2px solid var(--green);color:var(--green);}
+.result-err{background:var(--red-bg);border:2px solid var(--red);color:var(--red);}
+.result-icon{font-size:48px;display:block;}
+.result-title{font-size:22px;font-weight:800;margin:8px 0 4px;}
+.result-info{font-size:14px;opacity:.8;}
+
+/* QR */
+#qr-reader{width:100%;max-width:400px;margin:0 auto;border-radius:12px;overflow:hidden;}
+.qr-wrap{text-align:center;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{background:var(--bg);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tbody tr:hover{background:var(--blue-bg);}
+tbody tr:last-child td{border-bottom:none;}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
+.badge-green{background:var(--green-bg);color:var(--green);}
+.badge-red{background:var(--red-bg);color:var(--red);}
+.badge-blue{background:var(--blue-bg);color:var(--accent);}
+.badge-amber{background:var(--amber-bg);color:var(--amber);}
+.mono{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;letter-spacing:.08em;}
+
+/* SEARCH */
+.search-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.search-bar input{flex:1;min-width:180px;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:14px;font-family:inherit;outline:none;}
+.search-bar input:focus{border-color:var(--accent);}
+.search-bar select{padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;outline:none;font-size:14px;}
+
+/* HISTÓRICO */
+.hist-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.hist-item:last-child{border-bottom:none;}
+.hist-icon{font-size:20px;}
+.hist-code{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;color:var(--accent);}
+.hist-time{font-size:12px;color:var(--ink3);}
+.hist-pax{font-size:12px;font-weight:600;background:var(--green-bg);color:var(--green);padding:2px 8px;border-radius:20px;margin-left:auto;}
+.hist-op{font-size:11px;background:var(--blue-bg);color:var(--accent);padding:2px 7px;border-radius:20px;}
+
+/* INGRESSOS */
+.ticket-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.ticket{border:2px dashed var(--border);border-radius:12px;padding:16px;text-align:center;background:var(--surface);page-break-inside:avoid;}
+.ticket-event{font-size:11px;font-weight:700;text-transform:uppercase;color:var(--ink3);letter-spacing:.1em;}
+.ticket-inst{font-size:14px;font-weight:800;color:var(--ink);margin:4px 0;}
+.ticket-code{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:800;letter-spacing:.2em;color:var(--accent);margin:8px 0;}
+.ticket-qr{margin:8px auto;display:flex;justify-content:center;}
+.ticket-lote{font-size:11px;color:var(--ink3);background:var(--bg);padding:4px 10px;border-radius:20px;display:inline-block;}
+
+/* BACKUP */
+.backup-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;border:1px solid var(--border);margin-bottom:8px;background:var(--bg);}
+.backup-meta{flex:1;}
+.backup-date{font-size:13px;font-weight:600;color:var(--ink);}
+.backup-info{font-size:12px;color:var(--ink3);}
+
+/* ALERT */
+.alert{padding:12px 16px;border-radius:10px;font-size:13px;font-weight:500;margin-bottom:12px;display:none;}
+.alert-green{background:var(--green-bg);color:var(--green);border:1px solid #86efac;}
+.alert-red{background:var(--red-bg);color:var(--red);border:1px solid #fca5a5;}
+.alert-blue{background:var(--blue-bg);color:var(--accent);border:1px solid #bfdbfe;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:16px;padding:32px;max-width:520px;width:100%;box-shadow:var(--shadow-lg);text-align:center;}
+.modal h3{font-size:20px;font-weight:800;margin-bottom:8px;}
+.modal p{color:var(--ink3);margin-bottom:20px;font-size:14px;}
+.modal-btns{display:flex;gap:10px;justify-content:center;}
+
+/* LOTE DELETE LIST */
+.lote-check-list{max-height:260px;overflow-y:auto;border:1.5px solid var(--border);border-radius:10px;padding:8px;margin-bottom:12px;text-align:left;}
+.lote-check-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;}
+.lote-check-item:hover{background:var(--bg);}
+.lote-check-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--red);cursor:pointer;}
+.lote-check-item label{font-size:14px;font-weight:500;cursor:pointer;flex:1;}
+.lote-check-item .lote-info{font-size:12px;color:var(--ink3);}
+
+/* PROGRESS */
+.progress-bar{background:var(--border);border-radius:20px;height:8px;margin-top:6px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--accent),#60a5fa);transition:width .4s;}
+
+/* MERGE FILE LIST */
+.merge-file-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid var(--border);border-radius:9px;margin-bottom:8px;background:var(--bg);font-size:13px;}
+.merge-file-name{font-weight:600;color:var(--ink);}
+.merge-file-info{font-size:12px;color:var(--ink3);}
+.merge-result{padding:16px;border-radius:10px;background:var(--green-bg);border:1px solid #86efac;font-size:13px;color:var(--green);display:none;margin-top:12px;}
+
+/* OPERADOR BADGE */
+.op-chip{display:inline-flex;align-items:center;gap:6px;background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:var(--accent);}
+
+/* PRINT */
+@media print{
+  body *{visibility:hidden;}
+  #print-area,#print-area *{visibility:visible;}
+  #print-area{position:fixed;inset:0;padding:16px;}
+  .ticket{border:2px dashed #333;}
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  min-height: 100vh;
-  line-height: 1.5;
+/* MOBILE */
+@media(max-width:640px){
+  .topbar{padding:0 16px;}
+  .topbar-brand span,.topbar-info{display:none;}
+  .main{padding:12px;}
+  .form-row{grid-template-columns:1fr;}
+  .stat-value{font-size:28px;}
+  .nav{padding:4px 8px;gap:2px;}
+  .nav-btn{padding:10px 10px;font-size:12px;flex:1 1 auto;justify-content:center;min-width:60px;}
+  .login-box{padding:32px 24px;}
 }
 
-/* ── LOGIN ─────────────────────────────────── */
-#loginScreen {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #2563eb 100%);
-  padding: 20px;
-}
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s;max-width:340px;}
+#toast.show{transform:translateY(0);opacity:1;}
 
-.login-box {
-  background: #fff;
-  border-radius: 20px;
-  padding: 48px 40px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.3);
-  text-align: center;
-}
+/* SHEETS CONFIG */
+.sheets-setup-box{background:var(--blue-bg);border:1px solid #bfdbfe;border-radius:12px;padding:16px;margin-bottom:16px;}
+.sheets-setup-box h4{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:8px;}
+.sheets-setup-box p{font-size:13px;color:var(--ink2);margin-bottom:6px;line-height:1.7;}
+.sheets-setup-box code{background:#dbeafe;padding:2px 6px;border-radius:4px;font-family:monospace;font-size:12px;}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:var(--accent);color:#fff;border-radius:50%;font-size:11px;font-weight:700;margin-right:6px;flex-shrink:0;}
 
-.login-logo {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.login-box h1 {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--ink);
-  margin-bottom: 4px;
-}
-
-.login-box p {
-  color: var(--ink3);
-  font-size: 14px;
-  margin-bottom: 32px;
-}
-
-.input-wrap { position: relative; margin-bottom: 12px; }
-.input-wrap input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  font-size: 15px;
-  font-family: inherit;
-  outline: none;
-  transition: border-color .2s;
-}
-.input-wrap input:focus { border-color: var(--accent); }
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 13px 20px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all .18s;
-  font-family: inherit;
-  white-space: nowrap;
-}
-.btn-primary { background: var(--accent); color: #fff; width: 100%; font-size: 16px; padding: 15px; }
-.btn-primary:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.35); }
-.btn-secondary { background: var(--bg); color: var(--ink2); border: 1.5px solid var(--border); }
-.btn-secondary:hover { background: var(--border); }
-.btn-green { background: var(--green); color: #fff; }
-.btn-green:hover { background: #15803d; }
-.btn-red { background: var(--red); color: #fff; }
-.btn-red:hover { background: #b91c1c; }
-.btn-amber { background: var(--amber); color: #fff; }
-.btn-icon { padding: 10px 14px; font-size: 15px; }
-
-/* ── LAYOUT ─────────────────────────────────── */
-#app { display: none; }
-
-.topbar {
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-  color: #fff;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 60px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
-}
-
-.topbar-brand { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-.topbar-brand span { font-weight: 300; opacity: .7; font-size: 14px; }
-.topbar-actions { display: flex; gap: 8px; align-items: center; }
-
-.nav {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 0 24px;
-  display: flex;
-  gap: 4px;
-  flex-wrap: wrap;
-}
-.nav-btn {
-  padding: 12px 14px;
-  border: none;
-  background: none;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ink3);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all .15s;
-  white-space: nowrap;
-  font-family: inherit;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.nav-btn:hover { color: var(--accent); }
-.nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
-
-@media (max-width: 640px) {
-  .nav {
-    padding: 4px 8px;
-    gap: 2px;
-  }
-  .nav-btn {
-    padding: 10px 10px;
-    font-size: 12px;
-    flex: 1 1 auto;
-    justify-content: center;
-    min-width: 80px;
-  }
-}
-
-.main { padding: 24px; max-width: 1400px; margin: 0 auto; }
-
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* ── CARDS & GRID ─────────────────────────────────── */
-.card {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
-  border: 1px solid var(--border);
-  margin-bottom: 16px;
-}
-.card-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--ink2);
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 16px; }
-.grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; }
-
-.stat-card {
-  background: var(--surface);
-  border-radius: var(--radius);
-  padding: 20px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-}
-.stat-label { font-size: 12px; font-weight: 600; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; }
-.stat-value { font-size: 36px; font-weight: 800; color: var(--ink); line-height: 1.1; margin: 4px 0; font-family: 'JetBrains Mono', monospace; }
-.stat-sub { font-size: 12px; color: var(--ink3); }
-.stat-icon { font-size: 28px; float: right; margin-top: -4px; }
-
-/* ── FORM ─────────────────────────────────── */
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.form-group { margin-bottom: 12px; }
-.form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--ink2); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
-.form-group input, .form-group select {
-  width: 100%;
-  padding: 11px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 9px;
-  font-size: 14px;
-  font-family: inherit;
-  outline: none;
-  background: var(--surface);
-  color: var(--ink);
-  transition: border-color .2s;
-}
-.form-group input:focus, .form-group select:focus { border-color: var(--accent); }
-.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-
-/* ── VALIDAÇÃO ─────────────────────────────────── */
-.validate-big input {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 22px;
-  font-weight: 600;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: .15em;
-  padding: 18px;
-  border: 2.5px solid var(--border);
-}
-.validate-big input:focus { border-color: var(--accent); }
-
-.result-box {
-  margin-top: 16px;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  display: none;
-}
-.result-ok { background: var(--green-bg); border: 2px solid var(--green); color: var(--green); }
-.result-err { background: var(--red-bg); border: 2px solid var(--red); color: var(--red); }
-.result-icon { font-size: 48px; display: block; }
-.result-title { font-size: 22px; font-weight: 800; margin: 8px 0 4px; }
-.result-info { font-size: 14px; opacity: .8; }
-
-/* ── QR SCANNER ─────────────────────────────────── */
-#qr-reader {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
-  border-radius: 12px;
-  overflow: hidden;
-}
-.qr-wrap { text-align: center; }
-
-/* ── TABLE ─────────────────────────────────── */
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-thead th {
-  background: var(--bg);
-  padding: 10px 12px;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ink3);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-tbody td {
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-}
-tbody tr:hover { background: var(--blue-bg); }
-tbody tr:last-child td { border-bottom: none; }
-
-.badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-.badge-green { background: var(--green-bg); color: var(--green); }
-.badge-red { background: var(--red-bg); color: var(--red); }
-.badge-blue { background: var(--blue-bg); color: var(--accent); }
-.badge-amber { background: var(--amber-bg); color: var(--amber); }
-
-.mono { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 13px; letter-spacing: .08em; }
-
-/* ── SEARCH ─────────────────────────────────── */
-.search-bar {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-.search-bar input {
-  flex: 1;
-  min-width: 180px;
-  padding: 10px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 9px;
-  font-size: 14px;
-  font-family: inherit;
-  outline: none;
-}
-.search-bar input:focus { border-color: var(--accent); }
-
-/* ── HISTÓRICO ─────────────────────────────────── */
-.hist-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-}
-.hist-item:last-child { border-bottom: none; }
-.hist-icon { font-size: 20px; }
-.hist-code { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; color: var(--accent); }
-.hist-time { font-size: 12px; color: var(--ink3); }
-.hist-pax { font-size: 12px; font-weight: 600; background: var(--green-bg); color: var(--green); padding: 2px 8px; border-radius: 20px; margin-left: auto; }
-
-/* ── INGRESSO PARA IMPRESSÃO ─────────────────────────────────── */
-.ticket-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-.ticket {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  text-align: center;
-  background: var(--surface);
-  page-break-inside: avoid;
-}
-.ticket-event { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--ink3); letter-spacing: .1em; }
-.ticket-inst { font-size: 14px; font-weight: 800; color: var(--ink); margin: 4px 0; }
-.ticket-code { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 800; letter-spacing: .2em; color: var(--accent); margin: 8px 0; }
-.ticket-qr { margin: 8px auto; display: flex; justify-content: center; }
-.ticket-lote { font-size: 11px; color: var(--ink3); background: var(--bg); padding: 4px 10px; border-radius: 20px; display: inline-block; }
-
-/* ── BACKUP ─────────────────────────────────── */
-.backup-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  margin-bottom: 8px;
-  background: var(--bg);
-}
-.backup-meta { flex: 1; }
-.backup-date { font-size: 13px; font-weight: 600; color: var(--ink); }
-.backup-info { font-size: 12px; color: var(--ink3); }
-
-/* ── ALERTAS ─────────────────────────────────── */
-.alert {
-  padding: 12px 16px;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 12px;
-  display: none;
-}
-.alert-green { background: var(--green-bg); color: var(--green); border: 1px solid #86efac; }
-.alert-red { background: var(--red-bg); color: var(--red); border: 1px solid #fca5a5; }
-
-/* ── MODAL ─────────────────────────────────── */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.5);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: #fff;
-  border-radius: 16px;
-  padding: 32px;
-  max-width: 440px;
-  width: 100%;
-  box-shadow: var(--shadow-lg);
-  text-align: center;
-}
-.modal h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-.modal p { color: var(--ink3); margin-bottom: 20px; font-size: 14px; }
-.modal-btns { display: flex; gap: 10px; justify-content: center; }
-
-/* ── PROGRESS ─────────────────────────────────── */
-.progress-bar { background: var(--border); border-radius: 20px; height: 8px; margin-top: 6px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 20px; background: linear-gradient(90deg, var(--accent), #60a5fa); transition: width .4s; }
-
-/* ── PRINT ─────────────────────────────────── */
-@media print {
-  body * { visibility: hidden; }
-  #print-area, #print-area * { visibility: visible; }
-  #print-area { position: fixed; inset: 0; padding: 16px; }
-  .ticket { border: 2px dashed #333; }
-}
-
-/* ── MOBILE ─────────────────────────────────── */
-@media (max-width: 640px) {
-  .topbar { padding: 0 16px; }
-  .topbar-brand span { display: none; }
-  .main { padding: 12px; }
-  .form-row { grid-template-columns: 1fr; }
-  .stat-value { font-size: 28px; }
-}
-
-/* ── TOAST ─────────────────────────────────── */
-#toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--ink);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  z-index: 9999;
-  transform: translateY(80px);
-  opacity: 0;
-  transition: all .3s;
-  max-width: 300px;
-}
-#toast.show { transform: translateY(0); opacity: 1; }
-
-/* ── OFFLINE BADGE ─────────────────────────────────── */
-.offline-badge {
-  background: var(--amber-bg);
-  color: var(--amber);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 20px;
-  letter-spacing: .05em;
-}
+/* REALTIME INDICATOR */
+.realtime-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:5px;animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 </style>
 </head>
 <body>
 
-<!-- ── LOGIN ─────────────────────────────────── -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">🎟</div>
     <h1>Isawere Eventos Pro</h1>
-    <p>Sistema de Controle de Senhas e Ingressos</p>
+    <p class="subtitle">Sistema de Controle de Senhas e Ingressos</p>
+
+    <div class="form-group" style="margin-bottom:12px;text-align:left">
+      <label style="display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em">Identificação do Operador</label>
+      <input type="text" id="loginOperador" placeholder="Seu nome (ex: João, Portaria 1)" style="width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:14px;font-family:inherit;outline:none;">
+    </div>
     <div class="input-wrap">
       <input type="password" id="loginInput" placeholder="Senha administrativa" onkeyup="if(event.key==='Enter')doLogin()">
     </div>
     <button class="btn btn-primary" onclick="doLogin()">🔐 Entrar</button>
-    <p style="margin-top:16px;color:#94a3b8;font-size:12px">Senha padrão: adm123</p>
+
+    <div id="login-sync-info" style="margin-top:16px;font-size:12px;color:#94a3b8">
+      <div id="login-sheets-status"></div>
+    </div>
+    <p style="margin-top:12px;color:#94a3b8;font-size:12px">Senha padrão: <strong>adm123</strong></p>
   </div>
 </div>
 
-<!-- ── APP ─────────────────────────────────── -->
+<!-- APP -->
 <div id="app">
   <div class="topbar">
-    <div class="topbar-brand">
-      🎟 Isawere Eventos Pro <span id="topEventName"></span>
-    </div>
+    <div class="topbar-brand">🎟 Isawere Eventos Pro <span id="topEventName"></span><span class="topbar-info" id="topOperadorName"></span></div>
     <div class="topbar-actions">
-      <span class="offline-badge">● OFFLINE</span>
+      <span id="sync-badge" class="sync-badge sync-offline" onclick="manualSync()" title="Clique para sincronizar agora">⚡ OFFLINE</span>
       <button class="btn btn-secondary btn-icon" onclick="doLogout()" title="Sair">⏻</button>
     </div>
   </div>
 
   <div class="nav">
     <button class="nav-btn active" data-tab="dashboard" onclick="switchTab(this)">📊 Dashboard</button>
-    <button class="nav-btn" data-tab="config" onclick="switchTab(this)">⚙️ Configuração</button>
-    <button class="nav-btn" data-tab="gerar" onclick="switchTab(this)">🎫 Gerar Senhas</button>
-    <button class="nav-btn" data-tab="validar" onclick="switchTab(this)">✅ Validar Entrada</button>
+    <button class="nav-btn" data-tab="config" onclick="switchTab(this)">⚙️ Config</button>
+    <button class="nav-btn" data-tab="gerar" onclick="switchTab(this)">🎫 Gerar</button>
+    <button class="nav-btn" data-tab="validar" onclick="switchTab(this)">✅ Validar</button>
     <button class="nav-btn" data-tab="senhas" onclick="switchTab(this)">📋 Senhas</button>
+    <button class="nav-btn" data-tab="gerenciar" onclick="switchTab(this)">🗂 Gerenciar</button>
     <button class="nav-btn" data-tab="ingressos" onclick="switchTab(this)">🖨 Ingressos</button>
     <button class="nav-btn" data-tab="historico" onclick="switchTab(this)">📜 Histórico</button>
+    <button class="nav-btn" data-tab="sincronizacao" onclick="switchTab(this)">☁️ Sync</button>
+    <button class="nav-btn" data-tab="offline" onclick="switchTab(this)">📡 Offline</button>
     <button class="nav-btn" data-tab="backup" onclick="switchTab(this)">💾 Backup</button>
   </div>
 
@@ -510,46 +273,28 @@ tbody tr:last-child td { border-bottom: none; }
     <!-- DASHBOARD -->
     <div id="tab-dashboard" class="tab-content active">
       <div class="grid-4">
-        <div class="stat-card">
-          <div class="stat-icon">🎫</div>
-          <div class="stat-label">Total de Senhas</div>
-          <div class="stat-value" id="st-total">0</div>
-          <div class="stat-sub">ingressos gerados</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">✅</div>
-          <div class="stat-label">Utilizadas</div>
-          <div class="stat-value" id="st-usadas">0</div>
-          <div class="stat-sub" id="st-pct">0% do total</div>
-          <div class="progress-bar"><div class="progress-fill" id="st-bar" style="width:0%"></div></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">👥</div>
-          <div class="stat-label">Pessoas Presentes</div>
-          <div class="stat-value" id="st-pessoas">0</div>
-          <div class="stat-sub">confirmadas</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📦</div>
-          <div class="stat-label">Lotes</div>
-          <div class="stat-value" id="st-lotes">0</div>
-          <div class="stat-sub">categorias</div>
-        </div>
+        <div class="stat-card"><div class="stat-icon">🎫</div><div class="stat-label">Total de Senhas</div><div class="stat-value" id="st-total">0</div><div class="stat-sub">ingressos gerados</div></div>
+        <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-label">Utilizadas</div><div class="stat-value" id="st-usadas">0</div><div class="stat-sub" id="st-pct">0% do total</div><div class="progress-bar"><div class="progress-fill" id="st-bar" style="width:0%"></div></div></div>
+        <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-label">Pessoas Presentes</div><div class="stat-value" id="st-pessoas">0</div><div class="stat-sub">confirmadas</div></div>
+        <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-label">Lotes</div><div class="stat-value" id="st-lotes">0</div><div class="stat-sub">categorias</div></div>
       </div>
-
       <div class="grid-2">
-        <div class="card">
-          <div class="card-title">📅 Evento Atual</div>
-          <div id="dash-event-info" style="color:var(--ink3);font-size:14px">Nenhum evento configurado.<br>Vá em <strong>Configuração</strong> para definir.</div>
-        </div>
-        <div class="card">
-          <div class="card-title">🕐 Últimas Entradas</div>
-          <div id="dash-recent"></div>
+        <div class="card"><div class="card-title">📅 Evento Atual</div><div id="dash-event-info" style="color:var(--ink3);font-size:14px">Nenhum evento configurado.<br>Vá em <strong>Config</strong> para definir.</div></div>
+        <div class="card"><div class="card-title">🕐 Últimas Entradas <span id="realtime-ind" style="display:none"><span class="realtime-dot"></span><span style="font-size:11px;color:var(--green);font-weight:600">AO VIVO</span></span></div><div id="dash-recent"></div></div>
+      </div>
+      <div class="card" style="background:var(--blue-bg);border-color:#bfdbfe">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:4px">☁️ Status da Sincronização Google Sheets</div>
+            <div id="dash-sync-detail" style="font-size:13px;color:var(--ink2)">Verificando...</div>
+          </div>
+          <button class="btn btn-secondary" style="font-size:13px" onclick="manualSync()">🔄 Sincronizar agora</button>
+          <button class="btn btn-secondary" style="font-size:13px" onclick="switchTabById('sincronizacao')">⚙️ Configurar</button>
         </div>
       </div>
     </div>
 
-    <!-- CONFIGURAÇÃO -->
+    <!-- CONFIG -->
     <div id="tab-config" class="tab-content">
       <div class="card" style="max-width:560px">
         <div class="card-title">⚙️ Dados do Evento</div>
@@ -573,8 +318,11 @@ tbody tr:last-child td { border-bottom: none; }
           <div class="form-group"><label>Quantidade de Senhas</label><input id="gen-qtd" type="number" min="1" max="10000" placeholder="Ex: 100"></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Pessoas por Senha</label><input id="gen-pessoas" type="number" min="1" value="1"></div>
+          <div class="form-group"><label>Categoria <span style="font-weight:400;color:var(--ink3)">(opcional)</span></label><input id="gen-categoria" placeholder="Ex: Secretaria de Saúde, 4º Série A"></div>
           <div class="form-group"><label>Prefixo (opcional)</label><input id="gen-prefix" placeholder="Ex: VIP-" maxlength="6"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Pessoas por Senha</label><input id="gen-pessoas" type="number" min="1" value="1"></div>
         </div>
         <div class="alert alert-green" id="gen-alert"></div>
         <button class="btn btn-primary" onclick="gerarSenhas()">✨ Gerar Senhas</button>
@@ -593,16 +341,32 @@ tbody tr:last-child td { border-bottom: none; }
                 onkeyup="if(event.key==='Enter')validarSenha()">
             </div>
           </div>
-          <button class="btn btn-primary" style="width:100%;font-size:16px;padding:16px" onclick="validarSenha()">
-            ✅ Validar Entrada
-          </button>
+          <button class="btn btn-primary" style="width:100%;font-size:16px;padding:16px" onclick="validarSenha()">✅ Validar Entrada</button>
           <div class="result-box" id="result-box">
             <span class="result-icon" id="result-icon"></span>
             <div class="result-title" id="result-title"></div>
             <div class="result-info" id="result-info"></div>
+            <!-- campos extras — aparecem só na entrada OK -->
+            <div id="extras-box" style="display:none;margin-top:16px;text-align:left;border-top:1.5px solid rgba(22,163,74,.3);padding-top:14px">
+              <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+                <label style="flex:1;min-width:120px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2);transition:border-color .2s" id="lbl-brinde">
+                  <input type="checkbox" id="chk-brinde" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer" onchange="updateExtraLabel('brinde')">
+                  🎁 Recebeu Brinde
+                </label>
+                <label style="flex:1;min-width:120px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2);transition:border-color .2s" id="lbl-presente">
+                  <input type="checkbox" id="chk-presente" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" onchange="updateExtraLabel('presente')">
+                  🎀 Trouxe Presente
+                </label>
+              </div>
+              <div style="position:relative">
+                <textarea id="val-obs" placeholder="Observações (opcional)..." rows="2"
+                  style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;outline:none;resize:vertical;transition:border-color .2s"
+                  onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+              </div>
+              <button class="btn btn-green" style="width:100%;margin-top:8px" onclick="confirmarExtras()">💾 Salvar e Próximo</button>
+            </div>
           </div>
         </div>
-
         <div class="card">
           <div class="card-title">📷 Escanear QR Code</div>
           <div class="qr-wrap">
@@ -622,34 +386,83 @@ tbody tr:last-child td { border-bottom: none; }
       <div class="card">
         <div class="card-title">📋 Gerenciamento de Senhas</div>
         <div class="search-bar">
-          <input id="search-senha" placeholder="🔍 Buscar por senha ou lote..." oninput="renderSenhas()">
-          <select id="filter-status" onchange="renderSenhas()" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;outline:none;font-size:14px">
+          <input id="search-senha" placeholder="🔍 Buscar por senha, lote ou categoria..." oninput="senhasPage=0;renderSenhas()">
+          <select id="filter-status" onchange="senhasPage=0;renderSenhas()">
             <option value="all">Todos os status</option>
             <option value="livre">Livres</option>
             <option value="usada">Utilizadas</option>
           </select>
-          <select id="filter-lote" onchange="renderSenhas()" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;outline:none;font-size:14px">
+          <select id="filter-lote" onchange="senhasPage=0;renderSenhas()">
             <option value="all">Todos os lotes</option>
+          </select>
+          <select id="filter-categoria" onchange="senhasPage=0;renderSenhas()">
+            <option value="all">Todas as categorias</option>
+          </select>
+          <select id="filter-brinde" onchange="senhasPage=0;renderSenhas()">
+            <option value="all">Brinde: todos</option>
+            <option value="sim">🎁 Recebeu brinde</option>
+            <option value="nao">Sem brinde</option>
+          </select>
+          <select id="filter-presente" onchange="senhasPage=0;renderSenhas()">
+            <option value="all">Presente: todos</option>
+            <option value="sim">🎀 Trouxe presente</option>
+            <option value="nao">Sem presente</option>
           </select>
           <button class="btn btn-secondary" onclick="exportCSV()">📄 CSV</button>
           <button class="btn btn-secondary" onclick="exportJSON()">📦 JSON</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr>
-                <th>Senha</th>
-                <th>Lote</th>
-                <th>Pessoas</th>
-                <th>Status</th>
-                <th>Entrada</th>
-                <th>QR</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Senha</th><th>Lote</th><th>Categoria</th><th>Pessoas</th><th>Status</th><th>Brinde</th><th>Presente</th><th>Obs</th><th>Entrada</th><th>Operador</th><th>QR</th></tr></thead>
             <tbody id="senhas-tbody"></tbody>
           </table>
         </div>
-        <div id="senhas-pag" style="margin-top:12px;font-size:13px;color:var(--ink3)"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px">
+          <div id="senhas-pag" style="font-size:13px;color:var(--ink3)"></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary btn-icon" onclick="prevPage()" id="btn-prev">← Anterior</button>
+            <button class="btn btn-secondary btn-icon" onclick="nextPage()" id="btn-next">Próxima →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GERENCIAR -->
+    <div id="tab-gerenciar" class="tab-content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🗑 Deletar Senhas por Lote</div>
+          <p style="font-size:13px;color:var(--ink3);margin-bottom:16px">Selecione os lotes que deseja remover permanentemente. Apenas senhas <strong>não utilizadas</strong> serão deletadas por padrão.</p>
+          <div class="form-group" style="margin-bottom:8px">
+            <label>Incluir também senhas já utilizadas?</label>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+              <input type="checkbox" id="del-incluir-usadas" style="width:16px;height:16px;accent-color:var(--red)">
+              <span style="font-size:13px;color:var(--ink2)">Sim, deletar também as utilizadas</span>
+            </div>
+          </div>
+          <div id="lote-check-list" class="lote-check-list"></div>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <button class="btn btn-secondary" style="font-size:12px;padding:8px 12px" onclick="toggleAllLotes(true)">Marcar todos</button>
+            <button class="btn btn-secondary" style="font-size:12px;padding:8px 12px" onclick="toggleAllLotes(false)">Desmarcar todos</button>
+          </div>
+          <button class="btn btn-red" style="width:100%" onclick="confirmarDeleteLote()">🗑 Deletar Lotes Selecionados</button>
+        </div>
+        <div class="card">
+          <div class="card-title" style="color:var(--red)">⚠️ Zona de Perigo</div>
+          <p style="font-size:13px;color:var(--ink3);margin-bottom:20px">As ações abaixo são irreversíveis e exigem senha do administrador.</p>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="border:1.5px solid var(--border);border-radius:10px;padding:16px">
+              <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px">🗑 Resetar Todo o Sistema</div>
+              <div style="font-size:13px;color:var(--ink3);margin-bottom:12px">Apaga <strong>todas</strong> as senhas, histórico e configurações.</div>
+              <button class="btn btn-red" style="width:100%" onclick="confirmarReset()">🗑 Resetar Sistema</button>
+            </div>
+            <div style="border:1.5px solid var(--border);border-radius:10px;padding:16px">
+              <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px">🔄 Limpar apenas Histórico</div>
+              <div style="font-size:13px;color:var(--ink3);margin-bottom:12px">Apaga o histórico de entradas mas mantém as senhas e suas marcações.</div>
+              <button class="btn btn-amber" style="width:100%;color:#fff" onclick="confirmarLimparHistorico()">🔄 Limpar Histórico</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -670,9 +483,7 @@ tbody tr:last-child td { border-bottom: none; }
           <button class="btn btn-green" onclick="imprimirIngressos()">🖨 Imprimir</button>
         </div>
         <div id="ticket-count" style="font-size:13px;color:var(--ink3);margin-bottom:12px"></div>
-        <div id="print-area">
-          <div class="ticket-grid" id="ticket-grid"></div>
-        </div>
+        <div id="print-area"><div class="ticket-grid" id="ticket-grid"></div></div>
       </div>
     </div>
 
@@ -684,11 +495,103 @@ tbody tr:last-child td { border-bottom: none; }
       </div>
     </div>
 
+    <!-- SINCRONIZAÇÃO GOOGLE SHEETS -->
+    <div id="tab-sincronizacao" class="tab-content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">☁️ Configurar Google Sheets</div>
+          <div class="sheets-setup-box">
+            <h4>📋 Como configurar (1 vez só — 5 min)</h4>
+            <p><span class="step-num">1</span>Abra sua planilha Google em branco</p>
+            <p><span class="step-num">2</span>Menu <strong>Extensões → Apps Script</strong></p>
+            <p><span class="step-num">3</span>Apague o código existente e cole o arquivo <code>codigo_apps_script.gs</code> que você baixou</p>
+            <p><span class="step-num">4</span>Clique em <strong>Implantar → Nova Implantação</strong></p>
+            <p><span class="step-num">5</span>Tipo: <strong>App da Web</strong> | Executar como: <strong>Eu</strong> | Acesso: <strong>Qualquer pessoa</strong></p>
+            <p><span class="step-num">6</span>Copie a <strong>URL da implantação</strong> e cole abaixo</p>
+            <p style="margin-top:8px;font-size:12px;color:var(--ink3)">✅ Todos os operadores usam a <strong>mesma URL</strong>. Dados sincronizados em tempo real a cada 10s.</p>
+          </div>
+          <div class="form-group"><label>URL do Apps Script (Web App)</label><input id="sheets-url" placeholder="https://script.google.com/macros/s/...../exec" type="url"></div>
+          <div class="alert alert-blue" id="sheets-alert" style="margin-bottom:12px"></div>
+          <div class="btn-row">
+            <button class="btn btn-primary" style="flex:1" onclick="salvarConfigSheets()">💾 Salvar e Conectar</button>
+            <button class="btn btn-secondary" onclick="testarConexaoSheets()">🔌 Testar</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">📡 Status da Sincronização</div>
+          <div id="sync-detail-panel" style="font-size:14px;color:var(--ink2);line-height:2">Verificando...</div>
+          <hr style="margin:16px 0;border:none;border-top:1px solid var(--border)">
+          <div class="card-title">🔄 Ações Manuais</div>
+          <div class="btn-row">
+            <button class="btn btn-green" onclick="manualSync()">⬆️ Enviar dados agora</button>
+            <button class="btn btn-secondary" onclick="manualPull()">⬇️ Buscar dados agora</button>
+          </div>
+          <p style="font-size:12px;color:var(--ink3);margin-top:12px">Sincronização automática a cada <strong>10 segundos</strong> quando online. Todos os operadores logados veem os mesmos dados em tempo real.</p>
+          <hr style="margin:16px 0;border:none;border-top:1px solid var(--border)">
+          <div class="card-title">👥 Operadores Ativos</div>
+          <div id="operadores-ativos" style="font-size:13px;color:var(--ink3)">Carregando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODO OFFLINE / MERGE -->
+    <div id="tab-offline" class="tab-content">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">📤 Exportar Minha Sessão Offline</div>
+          <div style="background:var(--amber-bg);border:1px solid #fcd34d;border-radius:10px;padding:14px;margin-bottom:16px;font-size:13px;color:var(--amber);">
+            <strong>📡 Como usar no modo offline:</strong><br>
+            Cada operador trabalha normalmente no sistema (sem internet). Ao terminar, clica em <strong>Exportar Sessão</strong>. Depois, um administrador importa todos os arquivos e faz o Merge (fusão) dos dados.
+          </div>
+          <div style="font-size:13px;color:var(--ink2);margin-bottom:16px">
+            <strong>Operador atual:</strong> <span id="offline-op-name" class="op-chip" style="margin-left:6px">—</span><br>
+            <span style="color:var(--ink3);font-size:12px">Senhas validadas nesta sessão: <strong id="offline-session-count">0</strong></span>
+          </div>
+          <button class="btn btn-green" style="width:100%;margin-bottom:8px" onclick="exportarSessaoOffline()">📤 Exportar Sessão (JSON)</button>
+          <button class="btn btn-secondary" style="width:100%" onclick="exportCSV()">📄 Exportar CSV completo</button>
+        </div>
+        <div class="card">
+          <div class="card-title">📥 Merge — Unir Sessões Offline</div>
+          <p style="font-size:13px;color:var(--ink3);margin-bottom:16px">Importe os arquivos exportados por cada operador. O sistema fará a fusão inteligente, sem duplicatas, respeitando qual marcação é mais recente.</p>
+          <div class="form-group">
+            <label>Selecionar arquivos JSON das sessões</label>
+            <input type="file" id="merge-files-input" accept=".json" multiple onchange="listarArquivosMerge(event)"
+              style="padding:10px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;width:100%">
+          </div>
+          <div id="merge-files-list" style="margin-bottom:12px"></div>
+          <button class="btn btn-primary" style="width:100%;margin-bottom:8px" id="btn-merge" onclick="executarMergeLocal()" disabled>🔀 Executar Merge Local</button>
+          <button class="btn btn-green" style="width:100%" id="btn-merge-sheets" onclick="executarMergeSheets()" disabled>☁️ Merge + Enviar ao Sheets</button>
+          <div class="merge-result" id="merge-result"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">ℹ️ Fluxo Recomendado para Eventos Sem Internet</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;font-size:13px">
+          <div style="padding:14px;background:var(--bg);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:20px;margin-bottom:8px">1️⃣</div>
+            <strong>Antes do evento</strong><br><span style="color:var(--ink3)">Admin gera todas as senhas e distribui o sistema (este arquivo HTML) para cada operador.</span>
+          </div>
+          <div style="padding:14px;background:var(--bg);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:20px;margin-bottom:8px">2️⃣</div>
+            <strong>Durante o evento</strong><br><span style="color:var(--ink3)">Cada operador valida entradas normalmente. O sistema salva tudo localmente.</span>
+          </div>
+          <div style="padding:14px;background:var(--bg);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:20px;margin-bottom:8px">3️⃣</div>
+            <strong>Ao terminar</strong><br><span style="color:var(--ink3)">Cada operador clica em <strong>Exportar Sessão</strong> e envia o arquivo para o admin.</span>
+          </div>
+          <div style="padding:14px;background:var(--bg);border-radius:10px;border:1px solid var(--border)">
+            <div style="font-size:20px;margin-bottom:8px">4️⃣</div>
+            <strong>Pós-evento</strong><br><span style="color:var(--ink3)">Admin importa todos os arquivos e clica em <strong>Merge</strong>. Resultado consolidado enviado ao Sheets.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- BACKUP -->
     <div id="tab-backup" class="tab-content">
       <div class="grid-2">
         <div class="card">
-          <div class="card-title">💾 Backups Automáticos <span style="font-size:11px;background:var(--blue-bg);color:var(--accent);padding:2px 8px;border-radius:20px;font-weight:600">até 20 versões</span></div>
+          <div class="card-title">💾 Backups Locais <span style="font-size:11px;background:var(--blue-bg);color:var(--accent);padding:2px 8px;border-radius:20px;font-weight:600">até 20 versões</span></div>
           <p style="font-size:13px;color:var(--ink3);margin-bottom:16px">Backup automático salvo a cada operação importante.</p>
           <div id="backup-list"></div>
         </div>
@@ -696,15 +599,12 @@ tbody tr:last-child td { border-bottom: none; }
           <div class="card-title">📥 Importar / Exportar</div>
           <div class="form-group">
             <label>Importar arquivo JSON</label>
-            <input type="file" id="import-file" accept=".json" onchange="importarJSON(event)" style="padding:10px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer">
+            <input type="file" id="import-file" accept=".json" onchange="importarJSON(event)" style="padding:10px;border:1.5px solid var(--border);border-radius:9px;cursor:pointer;width:100%">
           </div>
           <div class="btn-row" style="margin-top:8px">
-            <button class="btn btn-green" onclick="exportJSON()">📦 Exportar JSON</button>
+            <button class="btn btn-green" onclick="exportJSON()">📦 Exportar JSON Completo</button>
             <button class="btn btn-secondary" onclick="exportCSV()">📄 Exportar CSV</button>
           </div>
-          <hr style="margin:16px 0;border:none;border-top:1px solid var(--border)">
-          <div class="card-title" style="color:var(--red)">⚠️ Zona de Perigo</div>
-          <button class="btn btn-red" onclick="confirmarReset()" style="width:100%">🗑 Resetar Todos os Dados</button>
         </div>
       </div>
     </div>
@@ -712,15 +612,13 @@ tbody tr:last-child td { border-bottom: none; }
   </div><!-- /main -->
 </div><!-- /app -->
 
-<!-- MODAL CONFIRM -->
+<!-- MODAIS -->
 <div class="modal-overlay" id="modal-reset">
   <div class="modal">
     <div style="font-size:48px">⚠️</div>
-    <h3>Resetar Tudo?</h3>
-    <p>Esta ação é <strong>irreversível</strong>. Todos os dados, senhas e histórico serão apagados permanentemente.</p>
-    <div class="form-group"><label>Digite a senha do administrador para confirmar</label>
-      <input type="password" id="reset-pwd" placeholder="Senha" onkeyup="if(event.key==='Enter')doReset()">
-    </div>
+    <h3>Resetar Todo o Sistema?</h3>
+    <p>Esta ação é <strong>irreversível</strong>. Todos os dados serão apagados.</p>
+    <div class="form-group"><label>Senha do administrador</label><input type="password" id="reset-pwd" placeholder="Senha" onkeyup="if(event.key==='Enter')doReset()"></div>
     <div class="modal-btns">
       <button class="btn btn-secondary" onclick="closeModal('modal-reset')">Cancelar</button>
       <button class="btn btn-red" onclick="doReset()">Confirmar Reset</button>
@@ -728,149 +626,341 @@ tbody tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
-<!-- TOAST -->
-<div id="toast"></div>
-
-<!-- AVISO FILE:// -->
-<div id="file-warning" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99999;align-items:center;justify-content:center;padding:20px">
-  <div style="background:#fff;border-radius:20px;padding:32px;max-width:400px;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.4)">
-    <div style="font-size:48px;margin-bottom:12px">📱⚠️</div>
-    <h2 style="font-size:20px;font-weight:800;color:#0f172a;margin-bottom:8px">Atenção: Modo Offline</h2>
-    <p style="font-size:14px;color:#64748b;margin-bottom:16px">
-      Você está abrindo este arquivo diretamente pelo celular (<strong>file://</strong>).<br><br>
-      Nesse modo, <strong>a câmera (QR Code) não funciona</strong> por restrição de segurança dos navegadores móveis — ela exige HTTPS.<br><br>
-      👉 Para usar a câmera no celular, hospede o arquivo no <strong>GitHub Pages</strong> ou qualquer servidor com HTTPS.
-    </p>
-    <p style="font-size:13px;color:#94a3b8;margin-bottom:20px">As demais funções (senha, validação manual, etc.) podem funcionar normalmente.</p>
-    <button onclick="document.getElementById('file-warning').style.display='none'" 
-      style="background:#2563eb;color:#fff;border:none;padding:14px 28px;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;width:100%">
-      Entendido, continuar assim
-    </button>
+<div class="modal-overlay" id="modal-hist">
+  <div class="modal">
+    <div style="font-size:48px">🔄</div>
+    <h3>Limpar Histórico?</h3>
+    <p>O histórico de entradas será apagado, mas as senhas e suas marcações serão mantidas.</p>
+    <div class="form-group"><label>Senha do administrador</label><input type="password" id="hist-pwd" placeholder="Senha" onkeyup="if(event.key==='Enter')doLimparHistorico()"></div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('modal-hist')">Cancelar</button>
+      <button class="btn btn-amber" style="color:#fff" onclick="doLimparHistorico()">Limpar Histórico</button>
+    </div>
   </div>
 </div>
 
-<!-- QR Code lib (works offline after first load via inline fallback) -->
-<script>
-// ─── INLINE QR CODE GENERATOR (sem dependência externa) ───────────────────
-// Mini QR encoder baseado em qrcode-generator (MIT)
-(function(r){function a(){var a=new Error("QR is too large");a.name="QRCodeTooLargeError";return a}function b(a,b){var c=[];for(var d=0;d<a;d++){c[d]=[];for(var e=0;e<a;e++)c[d][e]=b}return c}var c=function(){var a=0,b=1,c=2;return{PATTERN000:a,PATTERN001:b,PATTERN010:c,PATTERN011:3,PATTERN100:4,PATTERN101:5,PATTERN110:6,PATTERN111:7}}();var d=function(){function a(a){var c=[],d=1;for(var e=0;e<a;e++){c.push(d);d<<=1;if(d>=256)d^=285}return c}function b(a){var b=a(),c=[];for(var d=0;d<256;d++)c[b[d]]=d;return c}var c=a(8),d=b(function(){return c});return{gexp:function(a){return a<0?c[(a%255+255)%255]:a>=256?c[a%255]:c[a]},glog:function(a){if(a<1)throw new Error("glog("+a+")");return d[a]}}}();var e=function(){function a(a){for(var c=[1],e=0;e<a;e++){c=b(c,[1,d.gexp(e)])}return c}function b(a,b){var c=[];for(var d=0;d<a.length+b.length-1;d++)c.push(0);for(var e=0;e<a.length;e++)for(var f=0;f<b.length;f++)c[e+f]^=d.glog(a[e])!==undefined&&d.glog(b[f])!==undefined?d.gexp((d.glog(a[e])+d.glog(b[f]))%255):0;return c}return{getRSBlocks:function(a,b){var c=f(a,b),d=c.length/3,e=[];for(var g=0;g<d;g++){var h=c[g*3+0],i=c[g*3+1],j=c[g*3+2];for(var k=0;k<h;k++)e.push(i,j)}return e},getErrorCorrectPolynomial:a}}();var f=function(a,b){var c=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15]];if(!c[a-1])return null;return c[a-1]};
-window.QRCode=function(a,b){var c=typeof b==='string'?{text:b}:b,d=c.text||'',e=4,f=1;
-function g(){var b=[];var c=function(a){b.push(a)};var e=d;for(var f=0;f<e.length;f++){var g=e.charCodeAt(f);if(g>0&&g<128)c(4),c(e.length),c(0);else c(4);break}b.push(0,0,0,0);return b}
-var h=a;if(typeof a==='string'){h=document.createElement('canvas');a.appendChild(h)}
-var i=h.getContext('2d');
-function j(a){var b=a.length;var c=Math.ceil(b/4)*4;while(a.length<c)a.push(0);return a}
-// Simplified: use a basic drawing approach
-var k=21+(f-1)*4;var l=10;h.width=h.height=(k+l*2)*(c.width||4||4);
-var m=c.width||4;h.width=h.height=(k+l*2)*m;
-i.fillStyle=c.colorLight||'#fff';i.fillRect(0,0,h.width,h.height);
-i.fillStyle=c.colorDark||'#000';
-// We'll use the full qrcode lib loaded below
-h._qr_text=d;h._qr_opts=c;
-}
-})(window);
-</script>
+<div class="modal-overlay" id="modal-del-lote">
+  <div class="modal">
+    <div style="font-size:48px">🗑</div>
+    <h3 id="modal-del-lote-title">Deletar Lotes?</h3>
+    <p id="modal-del-lote-desc">Quantas senhas serão removidas.</p>
+    <div class="form-group"><label>Senha do administrador</label><input type="password" id="del-lote-pwd" placeholder="Senha" onkeyup="if(event.key==='Enter')doDeleteLote()"></div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('modal-del-lote')">Cancelar</button>
+      <button class="btn btn-red" onclick="doDeleteLote()">Confirmar Deleção</button>
+    </div>
+  </div>
+</div>
 
-<!-- QRCode.js real lib via CDN with offline fallback -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
-  onerror="console.warn('QRCode CDN failed, using inline fallback')"></script>
+<div id="toast"></div>
 
-<!-- html5-qrcode for scanning -->
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"
-  onerror="console.warn('html5-qrcode not available offline')"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" onerror="console.warn('QRCode CDN failed')"></script>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" onerror="console.warn('html5-qrcode not available offline')"></script>
 
 <script>
 // ════════════════════════════════════════════════════
-//  ISAWERE EVENTOS PRO — Engine Principal
+//  ISAWERE EVENTOS PRO — Engine com Google Sheets Sync
 // ════════════════════════════════════════════════════
 
-const STORAGE_KEY = 'ISAWERE_PRO_v2';
-const BACKUP_KEY  = 'ISAWERE_BACKUP_v2';
-const ADM_PASS    = 'adm123';
-const MAX_BACKUPS = 20;
-const PAGE_SIZE   = 50;
+const STORAGE_KEY   = 'ISAWERE_PRO_v4';
+const BACKUP_KEY    = 'ISAWERE_BACKUP_v4';
+const SESSION_KEY   = 'ISAWERE_SESSION_v4';
+const SHEETS_CFG_KEY= 'ISAWERE_SHEETS_CFG';
+const ADM_PASS      = 'adm123';
+const MAX_BACKUPS   = 20;
+const PAGE_SIZE     = 50;
+const SESSION_TTL   = 8 * 60 * 60 * 1000;
+const SYNC_INTERVAL = 10000; // 10s
 
-// ── DETECÇÃO DE PROTOCOLO ────────────────────────────────────
-(function() {
-  const isFileProtocol = location.protocol === 'file:';
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  if (isFileProtocol && isMobile) {
-    document.getElementById('file-warning').style.display = 'flex';
-  }
-})();
-
-// ── STORAGE SEGURO (funciona mesmo quando localStorage é bloqueado) ────────────────
-const safeStorage = (function() {
-  let _mem = {};
-  function tryLS() {
-    try { localStorage.setItem('__test__', '1'); localStorage.removeItem('__test__'); return true; }
-    catch(e) { return false; }
-  }
-  const _useLS = tryLS();
+// ── SAFE STORAGE ──────────────────────────────────
+const safeStorage = (() => {
+  let mem = {};
+  function canLS() { try { localStorage.setItem('__t__','1'); localStorage.removeItem('__t__'); return true; } catch(e){ return false; } }
+  const use = canLS();
   return {
-    get(k) {
-      if (_useLS) { try { return localStorage.getItem(k); } catch(e) {} }
-      return _mem[k] || null;
-    },
-    set(k, v) {
-      if (_useLS) { try { localStorage.setItem(k, v); return; } catch(e) {} }
-      _mem[k] = v;
-    },
-    remove(k) {
-      if (_useLS) { try { localStorage.removeItem(k); return; } catch(e) {} }
-      delete _mem[k];
-    }
+    get(k) { if(use) { try { return localStorage.getItem(k); } catch(e){} } return mem[k]||null; },
+    set(k,v) { if(use) { try { localStorage.setItem(k,v); return; } catch(e){} } mem[k]=v; },
+    remove(k) { if(use) { try { localStorage.removeItem(k); return; } catch(e){} } delete mem[k]; }
   };
 })();
 
+// ── DB ─────────────────────────────────────────────
 let db = loadDB();
 let qrScanner = null;
-let currentPage = 0;
+let senhasPage = 0;
+let syncTimer = null;
+let isSyncing = false;
+let lastSyncTime = null;
+let syncEnabled = false;
+let pendingLotesToDelete = [];
+let currentOperador = '';
+let mergeFilesData = [];
+let sessionValidations = 0;
 
-// ── PERSISTÊNCIA ────────────────────────────────────
-function loadDB() {
-  try {
-    return JSON.parse(safeStorage.get(STORAGE_KEY)) || newDB();
-  } catch(e) { return newDB(); }
-}
-
-function newDB() {
-  return { config: {}, senhas: [], historico: [] };
-}
-
-function saveDB() {
+function newDB() { return { config:{}, senhas:[], historico:[], _v: Date.now() }; }
+function loadDB() { try { return JSON.parse(safeStorage.get(STORAGE_KEY)) || newDB(); } catch(e){ return newDB(); } }
+function saveDB(skipSync) {
+  db._v = Date.now();
   safeStorage.set(STORAGE_KEY, JSON.stringify(db));
   autoBackup();
   render();
+  if (!skipSync) schedulePush();
 }
 
 function autoBackup() {
   try {
-    let backups = JSON.parse(safeStorage.get(BACKUP_KEY)) || [];
-    backups.unshift({
-      ts: new Date().toISOString(),
-      label: new Date().toLocaleString('pt-BR'),
-      total: db.senhas.length,
-      usadas: db.senhas.filter(s => s.usada).length,
-      data: JSON.stringify(db)
-    });
-    if (backups.length > MAX_BACKUPS) backups = backups.slice(0, MAX_BACKUPS);
-    safeStorage.set(BACKUP_KEY, JSON.stringify(backups));
+    let bk = JSON.parse(safeStorage.get(BACKUP_KEY)) || [];
+    bk.unshift({ ts: new Date().toISOString(), label: new Date().toLocaleString('pt-BR'), total: db.senhas.length, usadas: db.senhas.filter(s=>s.usada).length, data: JSON.stringify(db) });
+    if (bk.length > MAX_BACKUPS) bk = bk.slice(0, MAX_BACKUPS);
+    safeStorage.set(BACKUP_KEY, JSON.stringify(bk));
   } catch(e) {}
 }
+function loadBackups() { try { return JSON.parse(safeStorage.get(BACKUP_KEY)) || []; } catch(e){ return []; } }
 
-function loadBackups() {
-  try { return JSON.parse(safeStorage.get(BACKUP_KEY)) || []; }
-  catch(e) { return []; }
+// ── SESSION ─────────────────────────────────────────
+function checkSession() {
+  try {
+    const s = JSON.parse(safeStorage.get(SESSION_KEY));
+    if (s && s.ts && (Date.now() - s.ts) < SESSION_TTL) return s;
+  } catch(e) {}
+  return null;
+}
+function createSession(op) { safeStorage.set(SESSION_KEY, JSON.stringify({ ts: Date.now(), operador: op || 'Operador' })); }
+function destroySession() { safeStorage.remove(SESSION_KEY); }
+function refreshSession() { const s = checkSession(); if (s) safeStorage.set(SESSION_KEY, JSON.stringify({ ts: Date.now(), operador: s.operador })); }
+
+document.addEventListener('click', refreshSession, { passive: true });
+document.addEventListener('keydown', refreshSession, { passive: true });
+
+// ── SHEETS CONFIG ─────────────────────────────────
+function loadSheetsCfg() { try { return JSON.parse(safeStorage.get(SHEETS_CFG_KEY)) || {}; } catch(e){ return {}; } }
+function saveSheetsCfg(cfg) { safeStorage.set(SHEETS_CFG_KEY, JSON.stringify(cfg)); }
+
+function salvarConfigSheets() {
+  const url = document.getElementById('sheets-url').value.trim();
+  if (!url || !url.startsWith('https://script.google.com')) {
+    showSheetsAlert('⚠️ Cole a URL correta do Apps Script (começa com https://script.google.com)', 'red'); return;
+  }
+  saveSheetsCfg({ url });
+  showSheetsAlert('💾 URL salva! Testando conexão...', 'blue');
+  testarConexaoSheets();
 }
 
-// ── LOGIN ────────────────────────────────────
+function showSheetsAlert(msg, color) {
+  const el = document.getElementById('sheets-alert');
+  el.style.display = 'block';
+  el.className = 'alert alert-' + (color==='red'?'red':color==='green'?'green':'blue');
+  el.textContent = msg;
+}
+
+async function testarConexaoSheets() {
+  const cfg = loadSheetsCfg();
+  if (!cfg.url) { showSheetsAlert('⚠️ Configure a URL primeiro', 'red'); return; }
+  showSheetsAlert('🔌 Testando...', 'blue');
+  try {
+    const r = await fetchSheets('ping', null, 'GET');
+    if (r && r.ok) {
+      showSheetsAlert('✅ Conectado com sucesso! Sincronizando...', 'green');
+      await pushToSheets();
+    } else {
+      showSheetsAlert('❌ Resposta inválida do servidor. Verifique a URL.', 'red');
+    }
+  } catch(e) {
+    showSheetsAlert('❌ Não foi possível conectar. Sem internet ou URL incorreta.', 'red');
+  }
+  updateSyncPanel();
+}
+
+// ── FETCH HELPER ─────────────────────────────────
+async function fetchSheets(action, payload, method) {
+  const cfg = loadSheetsCfg();
+  if (!cfg.url) throw new Error('URL não configurada');
+  const url = cfg.url + '?action=' + action;
+  const opts = { method: method || (payload ? 'POST' : 'GET') };
+  if (payload) {
+    opts.headers = { 'Content-Type': 'text/plain' };
+    opts.body = payload;
+  }
+  const r = await fetch(url, opts);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+// ── PUSH (enviar dados) ──────────────────────────
+async function pushToSheets() {
+  const cfg = loadSheetsCfg();
+  if (!cfg.url) return false;
+  isSyncing = true; updateSyncBadge('syncing');
+  try {
+    const content = JSON.stringify(db);
+    const r = await fetchSheets('write', content, 'POST');
+    if (r && r.ok) {
+      lastSyncTime = new Date();
+      isSyncing = false;
+      syncEnabled = true;
+      updateSyncBadge('online');
+      updateSyncPanel();
+      return true;
+    }
+    throw new Error(r ? r.error : 'Erro desconhecido');
+  } catch(e) {
+    isSyncing = false;
+    syncEnabled = false;
+    updateSyncBadge('offline');
+    return false;
+  }
+}
+
+// ── PULL (buscar dados) ──────────────────────────
+async function pullFromSheets() {
+  const cfg = loadSheetsCfg();
+  if (!cfg.url) return false;
+  isSyncing = true; updateSyncBadge('syncing');
+  try {
+    const r = await fetchSheets('read', null, 'GET');
+    if (!r || !r.ok) throw new Error('Leitura falhou');
+    const remote = r.data;
+    if (!remote) { isSyncing=false; syncEnabled=true; updateSyncBadge('online'); return true; }
+
+    if ((remote._v || 0) > (db._v || 0)) {
+      // Merge: manter marcações locais mais recentes
+      const localMap = {};
+      db.senhas.forEach(s => { localMap[s.senha] = s; });
+      (remote.senhas || []).forEach(s => {
+        if (localMap[s.senha] && localMap[s.senha].usada && !s.usada) {
+          s.usada = true;
+          s.entrada = localMap[s.senha].entrada;
+          s.operador = localMap[s.senha].operador;
+        }
+      });
+      // Merge histórico
+      const histSet = new Set((remote.historico||[]).map(h => h.senha+'|'+h.hora));
+      (db.historico||[]).forEach(h => {
+        if (!histSet.has(h.senha+'|'+h.hora)) remote.historico.push(h);
+      });
+      remote.historico.sort((a,b) => (b.hora > a.hora ? 1 : -1));
+      db = remote;
+      safeStorage.set(STORAGE_KEY, JSON.stringify(db));
+      render();
+    }
+    lastSyncTime = new Date();
+    isSyncing = false;
+    syncEnabled = true;
+    updateSyncBadge('online');
+    updateSyncPanel();
+    return true;
+  } catch(e) {
+    isSyncing = false;
+    syncEnabled = false;
+    updateSyncBadge('offline');
+    return false;
+  }
+}
+
+let pushPending = false;
+function schedulePush() {
+  if (!pushPending) {
+    pushPending = true;
+    setTimeout(async () => { await pushToSheets(); pushPending = false; }, 1500);
+  }
+}
+
+async function manualSync() {
+  showToast('🔄 Sincronizando...');
+  const ok = await pushToSheets();
+  if (ok) showToast('✅ Dados enviados ao Google Sheets!');
+  else showToast('⚠️ Offline — dados salvos localmente', true);
+}
+
+async function manualPull() {
+  showToast('⬇️ Buscando dados...');
+  const ok = await pullFromSheets();
+  if (ok) showToast('✅ Dados atualizados do Sheets!');
+  else showToast('⚠️ Não foi possível buscar dados', true);
+}
+
+function initSync() {
+  const cfg = loadSheetsCfg();
+  if (cfg.url) {
+    const el = document.getElementById('sheets-url');
+    if (el) el.value = cfg.url;
+    pullFromSheets();
+    document.getElementById('realtime-ind').style.display = 'inline-flex';
+  }
+  syncTimer = setInterval(async () => {
+    const s = checkSession();
+    if (!s) { doLogout(); return; }
+    await pullFromSheets();
+  }, SYNC_INTERVAL);
+}
+
+// ── SYNC UI ─────────────────────────────────────
+function updateSyncBadge(state) {
+  const el = document.getElementById('sync-badge');
+  if (!el) return;
+  if (state==='online') { el.className='sync-badge sync-online'; el.textContent='✅ ONLINE'; }
+  else if (state==='offline') { el.className='sync-badge sync-offline'; el.textContent='⚡ OFFLINE'; }
+  else { el.className='sync-badge sync-syncing'; el.textContent='🔄 SYNC...'; }
+  updateDashSyncDetail();
+}
+
+function updateDashSyncDetail() {
+  const el = document.getElementById('dash-sync-detail');
+  if (!el) return;
+  const cfg = loadSheetsCfg();
+  if (!cfg.url) {
+    el.innerHTML = '⚙️ Sincronização não configurada — <a href="#" onclick="switchTabById(\'sincronizacao\')" style="color:var(--accent)">configurar agora</a>';
+  } else if (syncEnabled) {
+    el.innerHTML = `✅ Conectado ao Google Sheets${lastSyncTime ? ' — Última sync: <strong>' + lastSyncTime.toLocaleTimeString('pt-BR') + '</strong>' : ''}`;
+  } else {
+    el.innerHTML = '⚠️ Offline — dados salvos localmente, serão sincronizados ao voltar a internet';
+  }
+}
+
+function updateSyncPanel() {
+  const el = document.getElementById('sync-detail-panel');
+  if (!el) return;
+  const cfg = loadSheetsCfg();
+  if (!cfg.url) {
+    el.innerHTML = '<span style="color:var(--amber)">⚠️ URL não configurada</span><br>Cole a URL do Apps Script acima para ativar.';
+  } else if (syncEnabled) {
+    el.innerHTML = `<span style="color:var(--green)">✅ Conectado ao Google Sheets</span><br>
+      ${lastSyncTime ? '⏱ Última sync: <strong>' + lastSyncTime.toLocaleString('pt-BR') + '</strong>' : ''}`;
+  } else {
+    el.innerHTML = '<span style="color:var(--amber)">⚠️ Offline</span><br>Sem conexão. Dados salvos localmente.';
+  }
+  updateDashSyncDetail();
+
+  // Operadores ativos (baseado no histórico recente)
+  const elOp = document.getElementById('operadores-ativos');
+  if (elOp) {
+    const cutoff = Date.now() - 30 * 60 * 1000; // últimos 30 min
+    const ops = {};
+    (db.historico||[]).forEach(h => {
+      if (h.op && new Date(h.hora).getTime() > cutoff) {
+        ops[h.op] = (ops[h.op]||0) + 1;
+      }
+    });
+    const keys = Object.keys(ops);
+    if (!keys.length) { elOp.textContent = 'Nenhum operador ativo nos últimos 30 min.'; }
+    else { elOp.innerHTML = keys.map(k=>`<span class="op-chip" style="margin:2px 4px">👤 ${k} <span style="background:rgba(37,99,235,.1);border-radius:20px;padding:1px 6px">${ops[k]}✅</span></span>`).join(''); }
+  }
+}
+
+// ── LOGIN ─────────────────────────────────────────
 function doLogin() {
   const v = document.getElementById('loginInput').value;
+  const op = document.getElementById('loginOperador').value.trim() || 'Operador';
   if (v === ADM_PASS) {
+    createSession(op);
+    currentOperador = op;
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
+    document.getElementById('topOperadorName').textContent = '· ' + op;
     render();
-    showToast('✅ Login realizado com sucesso!');
+    initSync();
+    updateOfflineTab();
+    showToast('✅ Bem-vindo, ' + op + '!');
   } else {
     document.getElementById('loginInput').style.borderColor = 'var(--red)';
     showToast('❌ Senha incorreta', true);
@@ -879,32 +969,47 @@ function doLogin() {
 }
 
 function doLogout() {
+  destroySession();
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginInput').value = '';
   stopQR();
+  if (syncTimer) { clearInterval(syncTimer); syncTimer = null; }
+  currentOperador = '';
 }
 
-// ── TABS ────────────────────────────────────
+// ── TABS ─────────────────────────────────────────
 function switchTab(btn) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
   const tab = btn.dataset.tab;
   document.getElementById('tab-' + tab).classList.add('active');
-  if (tab === 'senhas') { populateLoteFilter(); renderSenhas(); }
-  if (tab === 'ingressos') { populatePrintLote(); renderIngressos(); }
-  if (tab === 'backup') renderBackups();
+  if (tab==='senhas') { populateLoteFilter(); renderSenhas(); }
+  if (tab==='ingressos') { populatePrintLote(); renderIngressos(); }
+  if (tab==='backup') renderBackups();
+  if (tab==='gerenciar') renderLoteCheckList();
+  if (tab==='offline') updateOfflineTab();
+  if (tab==='sincronizacao') {
+    updateSyncPanel();
+    const cfg = loadSheetsCfg();
+    if (cfg.url) document.getElementById('sheets-url').value = cfg.url;
+  }
 }
 
-// ── CONFIG ────────────────────────────────────
+function switchTabById(id) {
+  const btn = document.querySelector(`[data-tab="${id}"]`);
+  if (btn) switchTab(btn);
+}
+
+// ── CONFIG ────────────────────────────────────────
 function salvarConfig() {
   db.config = {
-    inst:   document.getElementById('cfg-inst').value,
+    inst: document.getElementById('cfg-inst').value,
     evento: document.getElementById('cfg-evento').value,
-    data:   document.getElementById('cfg-data').value,
-    local:  document.getElementById('cfg-local').value,
-    cap:    document.getElementById('cfg-cap').value
+    data: document.getElementById('cfg-data').value,
+    local: document.getElementById('cfg-local').value,
+    cap: document.getElementById('cfg-cap').value
   };
   saveDB();
   showToast('⚙️ Configuração salva!');
@@ -919,353 +1024,394 @@ function loadConfig() {
   document.getElementById('cfg-cap').value    = c.cap    || '';
 }
 
-// ── GERAR ────────────────────────────────────
-function gerarSenhas() {
-  const qtd  = parseInt(document.getElementById('gen-qtd').value) || 0;
-  const pax  = parseInt(document.getElementById('gen-pessoas').value) || 1;
-  const lote = document.getElementById('gen-lote').value.trim() || 'GERAL';
-  const pfx  = document.getElementById('gen-prefix').value.trim().toUpperCase();
+// ── RENDER GLOBAL ─────────────────────────────────
+function render() {
+  loadConfig();
+  renderDashboard();
+  renderHistorico();
+  const c = db.config || {};
+  document.getElementById('topEventName').textContent = c.evento ? '· ' + c.evento : '';
+  const s = checkSession();
+  if (s && s.operador) {
+    currentOperador = s.operador;
+    document.getElementById('topOperadorName').textContent = '· ' + s.operador;
+  }
+}
 
-  if (qtd < 1 || qtd > 10000) { showToast('⚠️ Quantidade entre 1 e 10000', true); return; }
+function renderDashboard() {
+  const total  = db.senhas.length;
+  const usadas = db.senhas.filter(s => s.usada).length;
+  const pessoas= db.senhas.filter(s => s.usada).reduce((a,s) => a+(s.pessoas||1), 0);
+  const lotes  = new Set(db.senhas.map(s=>s.lote)).size;
+  const pct    = total ? Math.round(usadas/total*100) : 0;
 
-  const existing = new Set(db.senhas.map(s => s.senha));
-  let count = 0;
+  document.getElementById('st-total').textContent   = total;
+  document.getElementById('st-usadas').textContent  = usadas;
+  document.getElementById('st-pessoas').textContent = pessoas;
+  document.getElementById('st-lotes').textContent   = lotes;
+  document.getElementById('st-pct').textContent     = pct + '% do total';
+  document.getElementById('st-bar').style.width     = pct + '%';
 
-  for (let i = 0; i < qtd; i++) {
-    let code;
-    let tries = 0;
-    do {
-      code = pfx + randomCode(pfx ? 6 : 8);
-      tries++;
-    } while (existing.has(code) && tries < 100);
-    existing.add(code);
-    db.senhas.push({ senha: code, lote, pessoas: pax, usada: false, entrada: '', gerado: new Date().toISOString() });
-    count++;
+  const c = db.config || {};
+  const evEl = document.getElementById('dash-event-info');
+  if (c.evento) {
+    evEl.innerHTML = `<strong>${c.evento}</strong><br><span style="color:var(--ink3)">${c.inst||''}</span>${c.data?`<br>📅 ${new Date(c.data).toLocaleString('pt-BR')}`:''}${c.local?`<br>📍 ${c.local}`:''}${c.cap?`<br>👥 Capacidade: ${c.cap}`:''}`;
+  } else {
+    evEl.innerHTML = 'Nenhum evento configurado.<br>Vá em <strong>Config</strong> para definir.';
   }
 
+  const recent = (db.historico||[]).slice(0, 5);
+  const recEl = document.getElementById('dash-recent');
+  if (!recent.length) { recEl.innerHTML='<p style="color:var(--ink3);font-size:13px">Nenhuma entrada registrada.</p>'; }
+  else {
+    recEl.innerHTML = recent.map(h=>`<div class="hist-item">
+      <span class="hist-icon">✅</span>
+      <div><div class="hist-code">${h.senha}</div><div class="hist-time">${h.hora}${h.op?` · <span style="color:var(--accent)">${h.op}</span>`:''}</div></div>
+      <span class="hist-pax">+${h.pax||1} pessoa(s)</span>
+    </div>`).join('');
+  }
+  updateDashSyncDetail();
+}
+
+// ── GERAR SENHAS ──────────────────────────────────
+function gerarSenhas() {
+  const lote      = document.getElementById('gen-lote').value.trim();
+  const qtd       = parseInt(document.getElementById('gen-qtd').value) || 0;
+  const pessoas   = parseInt(document.getElementById('gen-pessoas').value) || 1;
+  const prefix    = document.getElementById('gen-prefix').value.trim().toUpperCase();
+  const categoria = document.getElementById('gen-categoria').value.trim();
+  if (!lote) { showToast('❌ Informe o nome do lote', true); return; }
+  if (qtd < 1 || qtd > 10000) { showToast('❌ Quantidade entre 1 e 10.000', true); return; }
+
+  const existentes = new Set(db.senhas.map(s => s.senha));
+  const novas = [];
+  let tentativas = 0;
+  while (novas.length < qtd && tentativas < qtd * 10) {
+    tentativas++;
+    const code = prefix + gerarCodigo(prefix ? 8 - prefix.length : 8);
+    if (!existentes.has(code)) { existentes.add(code); novas.push({ senha: code, lote, categoria, pessoas, usada: false, entrada: '', operador: '', brinde: false, presente: false, obs: '' }); }
+  }
+  db.senhas.push(...novas);
   saveDB();
   const el = document.getElementById('gen-alert');
   el.style.display = 'block';
-  el.textContent = `✅ ${count} senhas do lote "${lote}" geradas com sucesso!`;
-  setTimeout(() => el.style.display = '', 4000);
-  showToast(`🎫 ${count} senhas geradas!`);
+  el.className = 'alert alert-green';
+  el.textContent = `✅ ${novas.length} senhas geradas para o lote "${lote}"${categoria?' — Categoria: '+categoria:''}!`;
+  showToast(`🎫 ${novas.length} senhas criadas!`);
 }
 
-function randomCode(len) {
+function gerarCodigo(len) {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let s = '';
-  for (let i = 0; i < len; i++) s += chars[Math.floor(Math.random() * chars.length)];
-  return s;
+  let c = '';
+  for (let i = 0; i < len; i++) {
+    if (i === 4 && len === 8) c += '-';
+    else c += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return c;
 }
 
-// ── VALIDAR ────────────────────────────────────
-function validarSenha(codParam) {
-  const code = (codParam || document.getElementById('val-input').value).trim().toUpperCase();
-  const box = document.getElementById('result-box');
+// ── VALIDAR ───────────────────────────────────────
+let _senhaAtual = null; // referência da senha validada aguardando confirmação extras
+
+function validarSenha() {
+  const input = document.getElementById('val-input').value.trim().toUpperCase();
+  if (!input) return;
+  const box  = document.getElementById('result-box');
   const icon = document.getElementById('result-icon');
-  const title = document.getElementById('result-title');
+  const title= document.getElementById('result-title');
   const info = document.getElementById('result-info');
+  const extrasBox = document.getElementById('extras-box');
 
-  box.style.display = 'none';
-  box.className = 'result-box';
-
-  if (!code) { showToast('⚠️ Digite uma senha', true); return; }
-
-  const s = db.senhas.find(x => x.senha === code);
-
+  const s = db.senhas.find(x => x.senha === input);
   box.style.display = 'block';
+  extrasBox.style.display = 'none';
+  _senhaAtual = null;
 
   if (!s) {
-    box.classList.add('result-err');
-    icon.textContent = '❌';
-    title.textContent = 'Senha Inválida';
-    info.textContent = 'Esta senha não foi encontrada no sistema.';
-    playBeep(false);
-    return;
+    box.className='result-box result-err'; icon.textContent='❌';
+    title.textContent='Senha Inválida'; info.textContent='Esta senha não existe no sistema.';
+    showToast('❌ Senha não encontrada', true);
+  } else if (s.usada) {
+    box.className='result-box result-err'; icon.textContent='⛔';
+    title.textContent='Já Utilizada';
+    info.textContent=`Entrada: ${s.entrada}${s.operador?' · '+s.operador:''}${s.brinde?' · 🎁 Brinde':''}${s.presente?' · 🎀 Presente':''}`;
+    showToast('⛔ Senha já utilizada!', true);
+  } else {
+    const now = new Date().toLocaleString('pt-BR');
+    s.usada = true; s.entrada = now; s.operador = currentOperador;
+    s.brinde = false; s.presente = false; s.obs = '';
+    _senhaAtual = s;
+    db.historico.unshift({ senha: input, hora: now, pax: s.pessoas, lote: s.lote, categoria: s.categoria||'', op: currentOperador, brinde: false, presente: false, obs: '' });
+    sessionValidations++;
+    // Mostrar box de confirmação + campos extras
+    box.className='result-box result-ok'; icon.textContent='✅';
+    title.textContent='Entrada Liberada!';
+    info.textContent=`${s.lote}${s.categoria?' · '+s.categoria:''} · ${s.pessoas} pessoa(s) · ${currentOperador}`;
+    // Resetar checkboxes e obs
+    document.getElementById('chk-brinde').checked   = false;
+    document.getElementById('chk-presente').checked = false;
+    document.getElementById('val-obs').value = '';
+    document.getElementById('lbl-brinde').style.borderColor   = 'var(--border)';
+    document.getElementById('lbl-presente').style.borderColor = 'var(--border)';
+    extrasBox.style.display = 'block';
+    showToast(`✅ Entrada liberada! (${s.pessoas} pessoa${s.pessoas>1?'s':''})`, false);
+    // NÃO limpa input ainda — espera confirmarExtras ou timeout
+    saveDB();
+    updateOfflineTab();
   }
-
-  if (s.usada) {
-    box.classList.add('result-err');
-    icon.textContent = '🚫';
-    title.textContent = 'Senha Já Utilizada';
-    info.textContent = `Entrada registrada em: ${s.entrada}`;
-    playBeep(false);
-    return;
-  }
-
-  s.usada = true;
-  s.entrada = new Date().toLocaleString('pt-BR');
-  db.historico.unshift({ senha: s.senha, hora: s.entrada, pessoas: s.pessoas, lote: s.lote });
-
-  box.classList.add('result-ok');
-  icon.textContent = '✅';
-  title.textContent = 'Entrada Liberada!';
-  info.textContent = `Lote: ${s.lote} • ${s.pessoas} pessoa(s) • ${s.entrada}`;
-  playBeep(true);
-
-  document.getElementById('val-input').value = '';
-  saveDB();
-  setTimeout(() => { box.style.display = 'none'; }, 5000);
 }
 
-function playBeep(ok) {
-  try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = ok ? 880 : 220;
-    osc.connect(ctx.destination);
-    osc.start();
-    osc.stop(ctx.currentTime + 0.15);
-  } catch(e) {}
+function updateExtraLabel(tipo) {
+  const chk = document.getElementById('chk-'+tipo);
+  const lbl = document.getElementById('lbl-'+tipo);
+  lbl.style.borderColor = chk.checked ? 'var(--green)' : 'var(--border)';
+  lbl.style.background  = chk.checked ? 'var(--green-bg)' : '#fff';
 }
 
-// ── QR SCANNER ────────────────────────────────────
-function startQR() {
-  // Avisa se estiver em file:// (câmera bloqueada em mobile)
-  if (location.protocol === 'file:' && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    showToast('❌ Câmera não disponível em file://. Use HTTPS (GitHub Pages).', true);
-    return;
-  }
-  if (!window.Html5Qrcode) { showToast('⚠️ Scanner requer conexão para carregar a biblioteca', true); return; }
-  stopQR();
-  qrScanner = new Html5Qrcode('qr-reader');
-  qrScanner.start(
-    { facingMode: 'environment' },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    (text) => {
-      validarSenha(text.trim().toUpperCase());
-    },
-    () => {}
-  ).catch(e => {
-    const msg = e && e.message ? e.message : String(e);
-    if (msg.toLowerCase().includes('permission') || msg.toLowerCase().includes('not allowed')) {
-      showToast('❌ Permissão de câmera negada. Autorize nas configurações do navegador.', true);
-    } else if (msg.toLowerCase().includes('https') || msg.toLowerCase().includes('insecure')) {
-      showToast('❌ Câmera exige HTTPS. Hospede o arquivo num servidor seguro.', true);
-    } else {
-      showToast('⚠️ Erro ao acessar câmera: ' + msg, true);
+function confirmarExtras() {
+  const brinde  = document.getElementById('chk-brinde').checked;
+  const presente= document.getElementById('chk-presente').checked;
+  const obs     = document.getElementById('val-obs').value.trim();
+  if (_senhaAtual) {
+    _senhaAtual.brinde  = brinde;
+    _senhaAtual.presente= presente;
+    _senhaAtual.obs     = obs;
+    // Atualiza também no histórico (última entrada)
+    if (db.historico.length) {
+      const h = db.historico.find(h => h.senha === _senhaAtual.senha);
+      if (h) { h.brinde = brinde; h.presente = presente; h.obs = obs; }
     }
-  });
+    saveDB();
+    const extras = [];
+    if (brinde) extras.push('🎁 Brinde');
+    if (presente) extras.push('🎀 Presente');
+    if (obs) extras.push('📝 ' + obs);
+    if (extras.length) showToast('💾 ' + extras.join(' · '));
+  }
+  _senhaAtual = null;
+  document.getElementById('extras-box').style.display = 'none';
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('val-input').value = '';
+  document.getElementById('val-input').focus();
+}
+
+// ── QR ────────────────────────────────────────────
+function startQR() {
+  if (!window.Html5Qrcode) { showToast('⚠️ Scanner não disponível offline', true); return; }
+  if (qrScanner) { qrScanner.stop().catch(()=>{}); }
+  qrScanner = new Html5Qrcode('qr-reader');
+  qrScanner.start({ facingMode: 'environment' },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    code => {
+      document.getElementById('val-input').value = code.toUpperCase();
+      validarSenha();
+    }, () => {}
+  ).catch(e => showToast('❌ Câmera: ' + e, true));
 }
 
 function stopQR() {
-  if (qrScanner) {
-    qrScanner.stop().catch(() => {});
-    qrScanner = null;
-    document.getElementById('qr-reader').innerHTML = '';
-  }
+  if (qrScanner) { qrScanner.stop().then(()=>{ qrScanner.clear(); qrScanner=null; }).catch(()=>{ qrScanner=null; }); }
 }
 
-// ── RENDER GERAL ────────────────────────────────────
-function render() {
-  // Stats
-  const total  = db.senhas.length;
-  const usadas = db.senhas.filter(s => s.usada);
-  const pct    = total ? Math.round(usadas.length / total * 100) : 0;
-  const paxTotal = usadas.reduce((a, b) => a + (b.pessoas || 1), 0);
-  const lotes  = [...new Set(db.senhas.map(s => s.lote))];
-
-  document.getElementById('st-total').textContent   = total;
-  document.getElementById('st-usadas').textContent  = usadas.length;
-  document.getElementById('st-pct').textContent     = pct + '% do total';
-  document.getElementById('st-bar').style.width     = pct + '%';
-  document.getElementById('st-pessoas').textContent = paxTotal;
-  document.getElementById('st-lotes').textContent   = lotes.length;
-
-  // Topbar
-  const c = db.config || {};
-  document.getElementById('topEventName').textContent = c.evento ? '— ' + c.evento : '';
-
-  // Dashboard event info
-  const ei = document.getElementById('dash-event-info');
-  if (c.evento) {
-    ei.innerHTML = `
-      <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px">${c.evento}</div>
-      <div style="font-size:14px;color:var(--ink3)">${c.inst || ''}</div>
-      ${c.data ? `<div style="font-size:13px;color:var(--accent);margin-top:6px">📅 ${new Date(c.data).toLocaleString('pt-BR')}</div>` : ''}
-      ${c.local ? `<div style="font-size:13px;color:var(--ink3)">📍 ${c.local}</div>` : ''}
-      ${c.cap ? `<div style="font-size:13px;margin-top:8px;font-weight:600">Capacidade: ${c.cap} pessoas</div>` : ''}
-    `;
-  }
-
-  // Dashboard recent
-  const rec = document.getElementById('dash-recent');
-  const hist5 = db.historico.slice(0, 5);
-  if (!hist5.length) { rec.innerHTML = '<p style="color:var(--ink3);font-size:13px">Nenhuma entrada ainda.</p>'; }
-  else {
-    rec.innerHTML = hist5.map(h => `
-      <div class="hist-item">
-        <span class="hist-icon">✅</span>
-        <div>
-          <div class="hist-code">${h.senha}</div>
-          <div class="hist-time">${h.hora}</div>
-        </div>
-        <span class="hist-pax">${h.pessoas} pax</span>
-      </div>`).join('');
-  }
-
-  // Histórico full
-  const hl = document.getElementById('historico-list');
-  if (!db.historico.length) { hl.innerHTML = '<p style="color:var(--ink3);font-size:13px">Nenhuma entrada registrada.</p>'; }
-  else {
-    hl.innerHTML = db.historico.map((h, i) => `
-      <div class="hist-item">
-        <span class="hist-icon">✅</span>
-        <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="hist-code">${h.senha}</span>
-            <span class="badge badge-blue">${h.lote || ''}</span>
-          </div>
-          <div class="hist-time">${h.hora}</div>
-        </div>
-        <span class="hist-pax">${h.pessoas} pax</span>
-      </div>`).join('');
-  }
-
-  loadConfig();
-}
-
-// ── TABELA SENHAS ────────────────────────────────────
-let senhasPage = 0;
-
+// ── SENHAS TABLE ───────────────────────────────────
 function populateLoteFilter() {
   const sel = document.getElementById('filter-lote');
-  const lotes = [...new Set(db.senhas.map(s => s.lote))];
-  const cur = sel.value;
-  sel.innerHTML = '<option value="all">Todos os lotes</option>' +
-    lotes.map(l => `<option value="${l}">${l}</option>`).join('');
-  sel.value = cur;
+  const lotes = [...new Set(db.senhas.map(s=>s.lote))];
+  sel.innerHTML = '<option value="all">Todos os lotes</option>' + lotes.map(l=>`<option value="${l}">${l}</option>`).join('');
+
+  const selCat = document.getElementById('filter-categoria');
+  if (selCat) {
+    const cats = [...new Set(db.senhas.map(s=>s.categoria||'').filter(Boolean))];
+    selCat.innerHTML = '<option value="all">Todas as categorias</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  }
 }
 
 function renderSenhas() {
-  const q  = (document.getElementById('search-senha').value || '').toUpperCase();
-  const fs = document.getElementById('filter-status').value;
-  const fl = document.getElementById('filter-lote').value;
+  const q   = (document.getElementById('search-senha').value||'').toUpperCase();
+  const st  = document.getElementById('filter-status').value;
+  const lt  = document.getElementById('filter-lote').value;
+  const catEl = document.getElementById('filter-categoria');
+  const brdEl = document.getElementById('filter-brinde');
+  const preEl = document.getElementById('filter-presente');
+  const cat = catEl ? catEl.value : 'all';
+  const brd = brdEl ? brdEl.value : 'all';
+  const pre = preEl ? preEl.value : 'all';
 
-  let rows = db.senhas.filter(s => {
-    if (q && !s.senha.includes(q) && !s.lote.toUpperCase().includes(q)) return false;
-    if (fs === 'livre' && s.usada) return false;
-    if (fs === 'usada' && !s.usada) return false;
-    if (fl !== 'all' && s.lote !== fl) return false;
+  let list = db.senhas.filter(s => {
+    if (q && !s.senha.includes(q) && !s.lote.toUpperCase().includes(q) && !(s.categoria||'').toUpperCase().includes(q)) return false;
+    if (st==='livre' && s.usada) return false;
+    if (st==='usada' && !s.usada) return false;
+    if (lt!=='all' && s.lote!==lt) return false;
+    if (cat!=='all' && (s.categoria||'')!==cat) return false;
+    if (brd==='sim' && !s.brinde) return false;
+    if (brd==='nao' && s.brinde) return false;
+    if (pre==='sim' && !s.presente) return false;
+    if (pre==='nao' && s.presente) return false;
     return true;
   });
-
-  const total = rows.length;
+  const total = list.length;
   const start = senhasPage * PAGE_SIZE;
-  const page  = rows.slice(start, start + PAGE_SIZE);
-
-  const tbody = document.getElementById('senhas-tbody');
-  tbody.innerHTML = page.map(s => `
-    <tr>
-      <td><span class="mono">${s.senha}</span></td>
-      <td><span class="badge badge-blue">${s.lote}</span></td>
-      <td style="text-align:center">${s.pessoas}</td>
-      <td>${s.usada
-        ? '<span class="badge badge-green">✅ Usada</span>'
-        : '<span class="badge badge-red">○ Livre</span>'}</td>
-      <td style="font-size:12px;color:var(--ink3)">${s.entrada || '—'}</td>
-      <td><button class="btn btn-secondary btn-icon" style="padding:6px 10px;font-size:12px" onclick="showQR('${s.senha}','${(db.config.evento||'Evento').replace(/'/g,'')}')" title="Ver QR">QR</button></td>
-    </tr>`).join('');
-
-  document.getElementById('senhas-pag').textContent =
-    `Exibindo ${start + 1}–${Math.min(start + PAGE_SIZE, total)} de ${total} registros`;
+  const page  = list.slice(start, start + PAGE_SIZE);
+  document.getElementById('senhas-tbody').innerHTML = page.map(s=>`<tr>
+    <td><span class="mono">${s.senha}</span></td>
+    <td>${s.lote}</td>
+    <td>${s.categoria ? `<span class="badge badge-blue" style="font-size:10px">${s.categoria}</span>` : '<span style="color:var(--ink3);font-size:12px">—</span>'}</td>
+    <td>${s.pessoas}</td>
+    <td><span class="badge ${s.usada?'badge-green':'badge-blue'}">${s.usada?'Usada':'Livre'}</span></td>
+    <td style="text-align:center">${s.brinde?'🎁':'—'}</td>
+    <td style="text-align:center">${s.presente?'🎀':'—'}</td>
+    <td style="font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(s.obs||'').replace(/"/g,'&quot;')}">${s.obs||'—'}</td>
+    <td style="font-size:12px">${s.entrada||'—'}</td>
+    <td style="font-size:12px">${s.operador||'—'}</td>
+    <td><button class="btn btn-secondary" style="padding:6px 10px;font-size:12px" onclick="showQR('${s.senha}','${((db.config||{}).evento||'Evento').replace(/'/g,'&#39;')}')">QR</button></td>
+  </tr>`).join('');
+  document.getElementById('senhas-pag').textContent = `Mostrando ${start+1}–${Math.min(start+PAGE_SIZE,total)} de ${total}`;
+  document.getElementById('btn-prev').disabled = senhasPage === 0;
+  document.getElementById('btn-next').disabled = start+PAGE_SIZE >= total;
 }
 
-// ── INGRESSOS ────────────────────────────────────
+function prevPage() { if (senhasPage>0) { senhasPage--; renderSenhas(); } }
+function nextPage() { senhasPage++; renderSenhas(); }
+
+// ── INGRESSOS ──────────────────────────────────────
 function populatePrintLote() {
   const sel = document.getElementById('print-lote');
-  const lotes = [...new Set(db.senhas.map(s => s.lote))];
-  sel.innerHTML = '<option value="all">Todos os lotes</option>' +
-    lotes.map(l => `<option value="${l}">${l}</option>`).join('');
+  const lotes = [...new Set(db.senhas.map(s=>s.lote))];
+  sel.innerHTML = '<option value="all">Todos os lotes</option>' + lotes.map(l=>`<option value="${l}">${l}</option>`).join('');
 }
 
 function renderIngressos() {
-  const lote   = document.getElementById('print-lote').value;
-  const status = document.getElementById('print-status').value;
-  const c      = db.config || {};
-
+  const lote  = document.getElementById('print-lote').value;
+  const status= document.getElementById('print-status').value;
+  const c = db.config || {};
   let senhas = db.senhas.filter(s => {
-    if (lote !== 'all' && s.lote !== lote) return false;
-    if (status === 'livre' && s.usada) return false;
-    if (status === 'usada' && !s.usada) return false;
+    if (lote!=='all' && s.lote!==lote) return false;
+    if (status==='livre' && s.usada) return false;
+    if (status==='usada' && !s.usada) return false;
     return true;
   });
-
   document.getElementById('ticket-count').textContent = `${senhas.length} ingressos selecionados`;
-
   const grid = document.getElementById('ticket-grid');
   grid.innerHTML = '';
-
   senhas.forEach(s => {
     const div = document.createElement('div');
     div.className = 'ticket';
-    div.innerHTML = `
-      <div class="ticket-event">${c.evento || 'Evento'}</div>
-      <div class="ticket-inst">${c.inst || ''}</div>
+    div.innerHTML = `<div class="ticket-event">${c.evento||'Evento'}</div>
+      <div class="ticket-inst">${c.inst||''}</div>
       <div class="ticket-code">${s.senha}</div>
       <div class="ticket-qr" id="tqr-${s.senha}"></div>
       <div class="ticket-lote">${s.lote} · ${s.pessoas} pessoa(s)</div>
-      ${c.data ? `<div style="font-size:10px;color:var(--ink3);margin-top:4px">${new Date(c.data).toLocaleString('pt-BR')}</div>` : ''}
-    `;
+      ${c.data?`<div style="font-size:10px;color:var(--ink3);margin-top:4px">${new Date(c.data).toLocaleString('pt-BR')}</div>`:''}`;
     grid.appendChild(div);
-
-    // Gerar QR
     setTimeout(() => {
-      const el = document.getElementById('tqr-' + s.senha);
-      if (el && window.QRCode) {
-        try {
-          new QRCode(el, {
-            text: s.senha,
-            width: 96, height: 96,
-            colorDark: '#0f172a',
-            colorLight: '#ffffff'
-          });
-        } catch(e) {}
-      }
+      const el = document.getElementById('tqr-'+s.senha);
+      if (el && window.QRCode) { try { new QRCode(el, { text: s.senha, width:96, height:96, colorDark:'#0f172a', colorLight:'#ffffff' }); } catch(e){} }
     }, 50);
   });
 }
 
-function imprimirIngressos() {
-  renderIngressos();
-  setTimeout(() => window.print(), 600);
+function imprimirIngressos() { renderIngressos(); setTimeout(() => window.print(), 600); }
+
+// ── HISTÓRICO ─────────────────────────────────────
+function renderHistorico() {
+  const el = document.getElementById('historico-list');
+  const hist = db.historico || [];
+  if (!hist.length) { el.innerHTML='<p style="color:var(--ink3);font-size:13px">Nenhuma entrada registrada.</p>'; return; }
+  el.innerHTML = hist.slice(0,100).map(h=>`<div class="hist-item">
+    <span class="hist-icon">✅</span>
+    <div style="flex:1">
+      <div class="hist-code">${h.senha}</div>
+      <div class="hist-time">${h.hora}${h.lote?' · '+h.lote:''}${h.categoria?' · <span style="color:var(--accent);font-size:11px">'+h.categoria+'</span>':''}</div>
+      ${h.obs?`<div style="font-size:11px;color:var(--ink3);margin-top:2px">📝 ${h.obs}</div>`:''}
+    </div>
+    ${h.brinde?'<span style="font-size:14px" title="Recebeu brinde">🎁</span>':''}
+    ${h.presente?'<span style="font-size:14px" title="Trouxe presente">🎀</span>':''}
+    ${h.op?`<span class="hist-op">👤 ${h.op}</span>`:''}
+    <span class="hist-pax">+${h.pax||1} pessoa(s)</span>
+  </div>`).join('');
 }
 
-// ── QR POPUP ────────────────────────────────────
+// ── QR POPUP ──────────────────────────────────────
 function showQR(code, event) {
   const w = window.open('', '_blank', 'width=340,height=420');
-  w.document.write(`
-    <!DOCTYPE html><html><head><meta charset="UTF-8">
-    <title>QR ${code}</title>
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>QR ${code}</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
-    <style>body{font-family:Arial;text-align:center;padding:24px;background:#fff}
-    .code{font-family:monospace;font-size:24px;font-weight:900;letter-spacing:.2em;color:#2563eb;margin:12px 0}
-    .evt{font-size:13px;color:#64748b}button{margin-top:12px;padding:10px 24px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px}</style>
-    </head><body>
-    <div class="evt">${event}</div>
-    <div class="code">${code}</div>
-    <div id="qr"></div>
+    <style>body{font-family:Arial;text-align:center;padding:24px;background:#fff}.code{font-family:monospace;font-size:24px;font-weight:900;letter-spacing:.2em;color:#2563eb;margin:12px 0}.evt{font-size:13px;color:#64748b}button{margin-top:12px;padding:10px 24px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px}</style>
+    </head><body><div class="evt">${event}</div><div class="code">${code}</div><div id="qr"></div>
     <button onclick="window.print()">🖨 Imprimir</button>
     <script>new QRCode(document.getElementById('qr'),{text:'${code}',width:200,height:200,colorDark:'#0f172a',colorLight:'#fff'});<\/script>
     </body></html>`);
   w.document.close();
 }
 
-// ── BACKUP UI ────────────────────────────────────
+// ── GERENCIAR (lotes / delete / reset) ────────────
+function renderLoteCheckList() {
+  const lotes = [...new Set(db.senhas.map(s=>s.lote))];
+  const el = document.getElementById('lote-check-list');
+  if (!lotes.length) { el.innerHTML='<p style="color:var(--ink3);font-size:13px;padding:8px">Nenhum lote criado.</p>'; return; }
+  el.innerHTML = lotes.map(l => {
+    const total = db.senhas.filter(s=>s.lote===l).length;
+    const usadas= db.senhas.filter(s=>s.lote===l && s.usada).length;
+    return `<div class="lote-check-item">
+      <input type="checkbox" id="lc-${l}" value="${l}">
+      <label for="lc-${l}">${l}</label>
+      <span class="lote-info">${total} senhas · ${usadas} usadas</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleAllLotes(v) {
+  document.querySelectorAll('#lote-check-list input[type=checkbox]').forEach(c => c.checked = v);
+}
+
+function confirmarDeleteLote() {
+  const selecionados = [...document.querySelectorAll('#lote-check-list input:checked')].map(c=>c.value);
+  if (!selecionados.length) { showToast('⚠️ Selecione pelo menos um lote', true); return; }
+  pendingLotesToDelete = selecionados;
+  const incl = document.getElementById('del-incluir-usadas').checked;
+  const total = db.senhas.filter(s => selecionados.includes(s.lote) && (incl || !s.usada)).length;
+  document.getElementById('modal-del-lote-title').textContent = `Deletar ${selecionados.length} lote(s)?`;
+  document.getElementById('modal-del-lote-desc').textContent = `Serão removidas ${total} senha(s) dos lotes: ${selecionados.join(', ')}.`;
+  document.getElementById('del-lote-pwd').value = '';
+  openModal('modal-del-lote');
+}
+
+function doDeleteLote() {
+  if (document.getElementById('del-lote-pwd').value !== ADM_PASS) { showToast('❌ Senha incorreta', true); return; }
+  const incl = document.getElementById('del-incluir-usadas').checked;
+  db.senhas = db.senhas.filter(s => !pendingLotesToDelete.includes(s.lote) || (s.usada && !incl));
+  saveDB();
+  closeModal('modal-del-lote');
+  renderLoteCheckList();
+  showToast('🗑 Lotes deletados!');
+}
+
+function confirmarReset() { document.getElementById('reset-pwd').value=''; openModal('modal-reset'); }
+function doReset() {
+  if (document.getElementById('reset-pwd').value !== ADM_PASS) { showToast('❌ Senha incorreta', true); return; }
+  db = newDB(); saveDB(true); closeModal('modal-reset');
+  showToast('🔄 Sistema resetado!');
+}
+
+function confirmarLimparHistorico() { document.getElementById('hist-pwd').value=''; openModal('modal-hist'); }
+function doLimparHistorico() {
+  if (document.getElementById('hist-pwd').value !== ADM_PASS) { showToast('❌ Senha incorreta', true); return; }
+  db.historico = []; saveDB(); closeModal('modal-hist');
+  showToast('🔄 Histórico limpo!');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ── BACKUP ────────────────────────────────────────
 function renderBackups() {
   const list = document.getElementById('backup-list');
   const backups = loadBackups();
-  if (!backups.length) { list.innerHTML = '<p style="color:var(--ink3);font-size:13px">Nenhum backup ainda.</p>'; return; }
-  list.innerHTML = backups.map((b, i) => `
-    <div class="backup-item">
-      <div>💾</div>
-      <div class="backup-meta">
-        <div class="backup-date">${b.label}</div>
-        <div class="backup-info">${b.total} senhas · ${b.usadas} usadas</div>
-      </div>
-      <button class="btn btn-secondary btn-icon" style="font-size:12px;padding:8px 12px" onclick="restaurarBackup(${i})">↩ Restaurar</button>
-    </div>`).join('');
+  if (!backups.length) { list.innerHTML='<p style="color:var(--ink3);font-size:13px">Nenhum backup ainda.</p>'; return; }
+  list.innerHTML = backups.map((b,i)=>`<div class="backup-item"><div>💾</div>
+    <div class="backup-meta"><div class="backup-date">${b.label}</div><div class="backup-info">${b.total} senhas · ${b.usadas} usadas</div></div>
+    <button class="btn btn-secondary btn-icon" style="font-size:12px;padding:8px 12px" onclick="restaurarBackup(${i})">↩ Restaurar</button>
+  </div>`).join('');
 }
 
 function restaurarBackup(i) {
@@ -1278,83 +1424,181 @@ function restaurarBackup(i) {
   renderBackups();
 }
 
-// ── EXPORT / IMPORT ────────────────────────────────────
+// ── EXPORT / IMPORT ───────────────────────────────
 function exportJSON() {
-  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type:'application/json' });
   dlBlob(blob, 'backup_' + slug() + '.json');
   showToast('📦 JSON exportado!');
 }
 
 function exportCSV() {
-  let csv = 'senha,lote,pessoas,status,entrada\n';
+  let csv = 'senha,lote,categoria,pessoas,status,brinde,presente,obs,entrada,operador\n';
   db.senhas.forEach(s => {
-    csv += `${s.senha},${s.lote},${s.pessoas},${s.usada ? 'Usada' : 'Livre'},"${s.entrada}"\n`;
+    csv += `${s.senha},${s.lote},"${s.categoria||''}",${s.pessoas},${s.usada?'Usada':'Livre'},${s.brinde?'Sim':'Não'},${s.presente?'Sim':'Não'},"${(s.obs||'').replace(/"/g,'""')}","${s.entrada}","${s.operador||''}"\n`;
   });
-  dlBlob(new Blob([csv], { type: 'text/csv' }), 'senhas_' + slug() + '.csv');
+  dlBlob(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}), 'senhas_'+slug()+'.csv');
   showToast('📄 CSV exportado!');
 }
 
-function dlBlob(blob, name) {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = name;
-  a.click();
+// ── OFFLINE SESSION EXPORT ────────────────────────
+function exportarSessaoOffline() {
+  const sessao = {
+    _tipo: 'sessao_offline',
+    _v: Date.now(),
+    operador: currentOperador,
+    exportadoEm: new Date().toLocaleString('pt-BR'),
+    senhas: db.senhas,
+    historico: db.historico,
+    config: db.config
+  };
+  const blob = new Blob([JSON.stringify(sessao, null, 2)], { type:'application/json' });
+  dlBlob(blob, 'sessao_' + currentOperador.replace(/\s/g,'_') + '_' + slug() + '.json');
+  showToast('📤 Sessão exportada: ' + currentOperador);
 }
+
+function updateOfflineTab() {
+  const el = document.getElementById('offline-op-name');
+  if (el) el.textContent = currentOperador || 'Operador';
+  const sc = document.getElementById('offline-session-count');
+  if (sc) sc.textContent = sessionValidations;
+}
+
+// ── MERGE LOCAL ───────────────────────────────────
+function listarArquivosMerge(e) {
+  mergeFilesData = [];
+  const files = Array.from(e.target.files);
+  const el = document.getElementById('merge-files-list');
+  if (!files.length) { el.innerHTML=''; return; }
+
+  const readers = files.map(f => new Promise(res => {
+    const fr = new FileReader();
+    fr.onload = () => {
+      try {
+        const data = JSON.parse(fr.result);
+        mergeFilesData.push({ name: f.name, data });
+        res({ name: f.name, ok: true, senhas: (data.senhas||[]).length, usadas: (data.senhas||[]).filter(s=>s.usada).length, op: data.operador||'?' });
+      } catch(e) { res({ name: f.name, ok: false }); }
+    };
+    fr.readAsText(f);
+  }));
+
+  Promise.all(readers).then(results => {
+    el.innerHTML = results.map(r => r.ok
+      ? `<div class="merge-file-item"><div><div class="merge-file-name">📄 ${r.name}</div><div class="merge-file-info">Operador: ${r.op} · ${r.senhas} senhas · ${r.usadas} usadas</div></div><span class="badge badge-green">✅ OK</span></div>`
+      : `<div class="merge-file-item"><div class="merge-file-name">❌ ${r.name}</div><span class="badge badge-red">Erro</span></div>`
+    ).join('');
+    const hasValid = results.some(r=>r.ok);
+    document.getElementById('btn-merge').disabled = !hasValid;
+    document.getElementById('btn-merge-sheets').disabled = !hasValid;
+  });
+}
+
+function executarMergeLocal() {
+  if (!mergeFilesData.length) return;
+  let base = JSON.parse(JSON.stringify(db)); // cópia do db atual
+
+  mergeFilesData.forEach(({ data }) => {
+    // Merge senhas
+    const senhaMap = {};
+    base.senhas.forEach(s => { senhaMap[s.senha] = Object.assign({}, s); });
+    (data.senhas||[]).forEach(s => {
+      if (!senhaMap[s.senha]) {
+        senhaMap[s.senha] = s;
+      } else if (s.usada && !senhaMap[s.senha].usada) {
+        senhaMap[s.senha].usada    = true;
+        senhaMap[s.senha].entrada  = s.entrada;
+        senhaMap[s.senha].operador = s.operador;
+      }
+    });
+    base.senhas = Object.values(senhaMap);
+
+    // Merge histórico
+    const histSet = new Set(base.historico.map(h => h.senha+'|'+h.hora));
+    (data.historico||[]).forEach(h => {
+      if (!histSet.has(h.senha+'|'+h.hora)) { base.historico.push(h); histSet.add(h.senha+'|'+h.hora); }
+    });
+  });
+
+  base.historico.sort((a,b) => (b.hora > a.hora ? 1 : -1));
+  base._v = Date.now();
+  db = base;
+  saveDB(true); // salva sem push automático
+
+  const usadas = db.senhas.filter(s=>s.usada).length;
+  const el = document.getElementById('merge-result');
+  el.style.display = 'block';
+  el.innerHTML = `✅ Merge concluído! Total: ${db.senhas.length} senhas · ${usadas} utilizadas · ${db.historico.length} entradas no histórico.`;
+  showToast('🔀 Merge realizado com sucesso!');
+}
+
+async function executarMergeSheets() {
+  // Primeiro faz o merge local
+  executarMergeLocal();
+  // Depois envia ao Sheets via merge endpoint
+  const cfg = loadSheetsCfg();
+  if (!cfg.url) { showToast('⚠️ Configure o Google Sheets primeiro', true); return; }
+  showToast('☁️ Enviando merge ao Sheets...');
+  try {
+    const r = await fetchSheets('merge', JSON.stringify(db), 'POST');
+    if (r && r.ok) {
+      showToast(`✅ Merge enviado! ${r.total} senhas · ${r.historico} entradas`);
+      lastSyncTime = new Date();
+      syncEnabled = true;
+      updateSyncBadge('online');
+    } else {
+      showToast('⚠️ Merge local OK, mas falhou no envio ao Sheets', true);
+    }
+  } catch(e) {
+    showToast('⚠️ Merge local OK, mas sem internet para enviar', true);
+  }
+}
+
+function dlBlob(blob, name) { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); }
 
 function importarJSON(e) {
   const file = e.target.files[0];
   if (!file) return;
   const fr = new FileReader();
   fr.onload = () => {
-    try {
-      db = JSON.parse(fr.result);
-      saveDB();
-      showToast('✅ Dados importados com sucesso!');
-    } catch(e) {
-      showToast('❌ Arquivo JSON inválido', true);
-    }
+    try { db = JSON.parse(fr.result); saveDB(); showToast('✅ Dados importados com sucesso!'); }
+    catch(e) { showToast('❌ Arquivo JSON inválido', true); }
   };
   fr.readAsText(file);
 }
 
-function slug() {
-  const d = new Date();
-  return d.toISOString().slice(0, 10);
-}
+function slug() { return new Date().toISOString().slice(0,10); }
 
-// ── RESET ────────────────────────────────────
-function confirmarReset() {
-  document.getElementById('reset-pwd').value = '';
-  document.getElementById('modal-reset').classList.add('open');
-}
-
-function doReset() {
-  const v = document.getElementById('reset-pwd').value;
-  if (v !== ADM_PASS) { showToast('❌ Senha incorreta', true); return; }
-  localStorage.removeItem(STORAGE_KEY);  // tenta ambos
-  safeStorage.remove(STORAGE_KEY);
-  closeModal('modal-reset');
-  showToast('🗑 Dados resetados!');
-  db = newDB();
-  render();
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-// ── TOAST ────────────────────────────────────
+// ── TOAST ─────────────────────────────────────────
 function showToast(msg, isErr) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.style.background = isErr ? 'var(--red)' : 'var(--ink)';
   t.classList.add('show');
   clearTimeout(t._t);
-  t._t = setTimeout(() => t.classList.remove('show'), 3000);
+  t._t = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-// ── INIT ────────────────────────────────────
-render();
+// ── INIT ──────────────────────────────────────────
+(function() {
+  const s = checkSession();
+  if (s) {
+    currentOperador = s.operador || 'Operador';
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('topOperadorName').textContent = '· ' + currentOperador;
+    render();
+    initSync();
+    updateOfflineTab();
+  } else {
+    const cfg = loadSheetsCfg();
+    const st = document.getElementById('login-sheets-status');
+    if (cfg.url) {
+      st.innerHTML = '<span style="color:#4ade80">☁️ Google Sheets configurado — sincronização ativa</span>';
+    } else {
+      st.innerHTML = '<span style="color:#fbbf24">⚡ Sync não configurado — configure em ☁️ Sync após logar</span>';
+    }
+  }
+})();
 </script>
 </body>
 </html>
