@@ -1590,32 +1590,34 @@ function showToast(msg, isErr) {
   t._t = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-// ── CACHE BUSTER - Limpa cache antigo ao carregar ──
+// ── CACHE BUSTER - Força versão nova mesmo em CDN/cache de celular ──
 (function() {
-  // Desregistra qualquer service worker antigo
+  const APP_VERSION = '20260612_002'; // ← atualize este número a cada deploy
+
+  // 1) Desregistra service workers antigos
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-      for (let registration of registrations) {
-        registration.unregister();
-      }
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      regs.forEach(function(r) { r.unregister(); });
     });
   }
-  // Limpa todos os caches do browser
+
+  // 2) Limpa Cache API
   if ('caches' in window) {
     caches.keys().then(function(names) {
-      for (let name of names) {
-        caches.delete(name);
-      }
+      names.forEach(function(n) { caches.delete(n); });
     });
   }
-  // Versão atual da aplicação
-  const APP_VERSION = '20260612_001';
+
+  // 3) Força reload via query string se versão mudou
+  //    Isso bypassa o cache da CDN do GitHub Pages no celular
   const storedVersion = localStorage.getItem('app_version');
   if (storedVersion !== APP_VERSION) {
     localStorage.setItem('app_version', APP_VERSION);
-    // Se não é a primeira vez (tem versão antiga), recarrega forçado
     if (storedVersion !== null) {
-      window.location.reload(true);
+      // Adiciona ?v=VERSÃO na URL para forçar novo request ao servidor
+      const url = new URL(window.location.href);
+      url.searchParams.set('v', APP_VERSION);
+      window.location.replace(url.toString());
     }
   }
 })();
