@@ -335,7 +335,7 @@ tbody tr:last-child td{border-bottom:none;}
 
     <!-- VALIDAR -->
     <div id="tab-validar" class="tab-content">
-      <div class="grid-2" style="max-width:900px">
+      <div style="max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
         <div class="card">
           <div class="card-title">⌨️ Digitar Senha</div>
           <div class="validate-big">
@@ -350,8 +350,18 @@ tbody tr:last-child td{border-bottom:none;}
             <span class="result-icon" id="result-icon"></span>
             <div class="result-title" id="result-title"></div>
             <div class="result-info" id="result-info"></div>
+            <button class="btn btn-secondary" id="btn-continuar-qr" style="display:none;width:100%;margin-top:14px;font-size:15px;padding:14px" onclick="continuarQR()">▶️ Continuar Leitura (Próximo)</button>
             <!-- campos extras — aparecem só na entrada OK -->
             <div id="extras-box" style="display:none;margin-top:16px;text-align:left;border-top:1.5px solid rgba(22,163,74,.3);padding-top:14px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px">
+                <span style="font-size:14px;font-weight:600;color:var(--ink2)">👥 Pessoas nesta entrada</span>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <button type="button" class="btn btn-secondary" style="padding:6px 14px;font-size:18px;font-weight:700;line-height:1" onclick="ajustarPessoas(-1)">−</button>
+                  <span id="val-pessoas" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;min-width:32px;text-align:center;display:inline-block">1</span>
+                  <button type="button" class="btn btn-secondary" style="padding:6px 14px;font-size:18px;font-weight:700;line-height:1" onclick="ajustarPessoas(1)">+</button>
+                </div>
+              </div>
+              <div style="font-size:11px;color:var(--ink3);margin:-2px 0 10px 2px">Cadastrado: <strong id="val-pessoas-cadastrado">1</strong> · ajuste se o número mudou na hora</div>
               <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
                 <label style="flex:1;min-width:120px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2);transition:border-color .2s" id="lbl-brinde">
                   <input type="checkbox" id="chk-brinde" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer" onchange="updateExtraLabel('brinde')">
@@ -503,22 +513,19 @@ tbody tr:last-child td{border-bottom:none;}
     <div id="tab-sincronizacao" class="tab-content">
       <div class="grid-2">
         <div class="card">
-          <div class="card-title">☁️ Configurar Google Sheets</div>
-          <div class="sheets-setup-box">
-            <h4>📋 Como configurar (1 vez só — 5 min)</h4>
-            <p><span class="step-num">1</span>Abra sua planilha Google em branco</p>
-            <p><span class="step-num">2</span>Menu <strong>Extensões → Apps Script</strong></p>
-            <p><span class="step-num">3</span>Apague o código existente e cole o arquivo <code>codigo_apps_script.gs</code> que você baixou</p>
-            <p><span class="step-num">4</span>Clique em <strong>Implantar → Nova Implantação</strong></p>
-            <p><span class="step-num">5</span>Tipo: <strong>App da Web</strong> | Executar como: <strong>Eu</strong> | Acesso: <strong>Qualquer pessoa</strong></p>
-            <p><span class="step-num">6</span>Copie a <strong>URL da implantação</strong> e cole abaixo</p>
-            <p style="margin-top:8px;font-size:12px;color:var(--ink3)">✅ Todos os operadores usam a <strong>mesma URL</strong>. Dados sincronizados em tempo real a cada 10s.</p>
+          <div class="card-title">☁️ Google Sheets</div>
+          <div class="form-group">
+            <label>URL do Apps Script (Web App)</label>
+            <div style="display:flex;gap:8px">
+              <input id="sheets-url" type="url" readonly placeholder="Nenhuma URL configurada"
+                style="background:var(--bg);color:var(--ink2);cursor:not-allowed">
+              <button class="btn btn-secondary" style="white-space:nowrap" onclick="confirmarEditarSheetsUrl()">✏️ Editar Link</button>
+            </div>
+            <p style="font-size:12px;color:var(--ink3);margin-top:8px">Todos os operadores usam a mesma URL. Dados sincronizados automaticamente a cada 10s.</p>
           </div>
-          <div class="form-group"><label>URL do Apps Script (Web App)</label><input id="sheets-url" placeholder="https://script.google.com/macros/s/...../exec" type="url"></div>
           <div class="alert alert-blue" id="sheets-alert" style="margin-bottom:12px"></div>
           <div class="btn-row">
-            <button class="btn btn-primary" style="flex:1" onclick="salvarConfigSheets()">💾 Salvar e Conectar</button>
-            <button class="btn btn-secondary" onclick="testarConexaoSheets()">🔌 Testar</button>
+            <button class="btn btn-primary" style="flex:1" onclick="testarConexaoSheets()">🔌 Testar Conexão</button>
           </div>
         </div>
         <div class="card">
@@ -656,6 +663,20 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-sheets-url">
+  <div class="modal">
+    <div style="font-size:48px">🔗</div>
+    <h3>Editar Link do Google Sheets</h3>
+    <p>Informe a nova URL do Apps Script (Web App) e a senha do administrador para confirmar.</p>
+    <div class="form-group"><label>Nova URL do Apps Script</label><input type="url" id="sheets-url-new" placeholder="https://script.google.com/macros/s/...../exec"></div>
+    <div class="form-group"><label>Senha do administrador</label><input type="password" id="sheets-url-pwd" placeholder="Senha" onkeyup="if(event.key==='Enter')doSalvarSheetsUrl()"></div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('modal-sheets-url')">Cancelar</button>
+      <button class="btn btn-primary" onclick="doSalvarSheetsUrl()">💾 Salvar Link</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" onerror="console.warn('QRCode CDN failed')"></script>
@@ -756,6 +777,23 @@ function salvarConfigSheets() {
   saveSheetsCfg({ url });
   showSheetsAlert('💾 URL salva! Testando conexão...', 'blue');
   testarConexaoSheets();
+}
+
+function confirmarEditarSheetsUrl() {
+  document.getElementById('sheets-url-new').value = document.getElementById('sheets-url').value || '';
+  document.getElementById('sheets-url-pwd').value = '';
+  openModal('modal-sheets-url');
+}
+
+function doSalvarSheetsUrl() {
+  if (document.getElementById('sheets-url-pwd').value !== ADM_PASS) { showToast('❌ Senha incorreta', true); return; }
+  const url = document.getElementById('sheets-url-new').value.trim();
+  if (!url || !url.startsWith('https://script.google.com')) {
+    showToast('⚠️ Cole a URL correta do Apps Script (começa com https://script.google.com)', true); return;
+  }
+  document.getElementById('sheets-url').value = url;
+  closeModal('modal-sheets-url');
+  salvarConfigSheets();
 }
 
 function showSheetsAlert(msg, color) {
@@ -1101,7 +1139,7 @@ function gerarSenhas() {
   while (novas.length < qtd && tentativas < qtd * 10) {
     tentativas++;
     const code = prefix + gerarCodigo(prefix ? 8 - prefix.length : 8);
-    if (!existentes.has(code)) { existentes.add(code); novas.push({ senha: code, lote, categoria, pessoas, usada: false, entrada: '', operador: '', brinde: false, presente: false, obs: '' }); }
+    if (!existentes.has(code)) { existentes.add(code); novas.push({ senha: code, lote, categoria, pessoas, pessoasCadastro: pessoas, usada: false, entrada: '', operador: '', brinde: false, presente: false, obs: '' }); }
   }
   db.senhas.push(...novas);
   saveDB();
@@ -1124,6 +1162,8 @@ function gerarCodigo(len) {
 
 // ── VALIDAR ───────────────────────────────────────
 let _senhaAtual = null; // referência da senha validada aguardando confirmação extras
+let _pessoasAtual = 1;  // quantidade de pessoas ajustável na validação atual
+let _qrPaused = false;  // true quando o scanner QR está pausado aguardando o operador
 
 function validarSenha() {
   const input = document.getElementById('val-input').value.trim().toUpperCase();
@@ -1133,6 +1173,7 @@ function validarSenha() {
   const title= document.getElementById('result-title');
   const info = document.getElementById('result-info');
   const extrasBox = document.getElementById('extras-box');
+  const btnContinuarQR = document.getElementById('btn-continuar-qr');
 
   const s = db.senhas.find(x => x.senha === input);
   box.style.display = 'block';
@@ -1165,12 +1206,26 @@ function validarSenha() {
     document.getElementById('val-obs').value = '';
     document.getElementById('lbl-brinde').style.borderColor   = 'var(--border)';
     document.getElementById('lbl-presente').style.borderColor = 'var(--border)';
+    // Ajuste de pessoas: parte do valor cadastrado, operador pode +/- na hora
+    if (s.pessoasCadastro == null) s.pessoasCadastro = s.pessoas || 1; // compatibilidade com senhas antigas
+    _pessoasAtual = s.pessoas || 1;
+    document.getElementById('val-pessoas').textContent = _pessoasAtual;
+    document.getElementById('val-pessoas-cadastrado').textContent = s.pessoasCadastro;
     extrasBox.style.display = 'block';
     showToast(`✅ Entrada liberada! (${s.pessoas} pessoa${s.pessoas>1?'s':''})`, false);
     // NÃO limpa input ainda — espera confirmarExtras ou timeout
     saveDB();
     updateOfflineTab();
   }
+
+  // Se a validação veio do scanner QR (pausado), mostra botão para continuar a leitura
+  // (não mostra junto com o extras-box, que já tem seu próprio botão "Salvar e Próximo")
+  btnContinuarQR.style.display = (_qrPaused && extrasBox.style.display === 'none') ? 'block' : 'none';
+}
+
+function ajustarPessoas(delta) {
+  _pessoasAtual = Math.max(1, _pessoasAtual + delta);
+  document.getElementById('val-pessoas').textContent = _pessoasAtual;
 }
 
 function updateExtraLabel(tipo) {
@@ -1188,12 +1243,15 @@ function confirmarExtras() {
     _senhaAtual.brinde  = brinde;
     _senhaAtual.presente= presente;
     _senhaAtual.obs     = obs;
+    _senhaAtual.pessoas = _pessoasAtual; // ajuste feito pelo operador na hora
+    _senhaAtual.pessoasAjustadoPor = (_pessoasAtual !== _senhaAtual.pessoasCadastro) ? currentOperador : '';
     // Atualiza também no histórico (última entrada)
     if (db.historico.length) {
       const h = db.historico.find(h => h.senha === _senhaAtual.senha);
-      if (h) { h.brinde = brinde; h.presente = presente; h.obs = obs; }
+      if (h) { h.brinde = brinde; h.presente = presente; h.obs = obs; h.pax = _pessoasAtual; h.paxCadastro = _senhaAtual.pessoasCadastro; }
     }
     saveDB();
+    updateOfflineTab();
     const extras = [];
     if (brinde) extras.push('🎁 Brinde');
     if (presente) extras.push('🎀 Presente');
@@ -1205,16 +1263,22 @@ function confirmarExtras() {
   document.getElementById('result-box').style.display = 'none';
   document.getElementById('val-input').value = '';
   document.getElementById('val-input').focus();
+  resumeQRIfPaused();
 }
 
 // ── QR ────────────────────────────────────────────
 function startQR() {
   if (!window.Html5Qrcode) { showToast('⚠️ Scanner não disponível offline', true); return; }
   if (qrScanner) { qrScanner.stop().catch(()=>{}); }
+  _qrPaused = false;
+  document.getElementById('btn-continuar-qr').style.display = 'none';
   qrScanner = new Html5Qrcode('qr-reader');
   qrScanner.start({ facingMode: 'environment' },
     { fps: 10, qrbox: { width: 250, height: 250 } },
     code => {
+      // Pausa a câmera para dar tempo ao operador de visualizar o resultado
+      if (qrScanner) { try { qrScanner.pause(true); } catch(e) {} }
+      _qrPaused = true;
       document.getElementById('val-input').value = code.toUpperCase();
       validarSenha();
     }, () => {}
@@ -1222,7 +1286,24 @@ function startQR() {
 }
 
 function stopQR() {
+  _qrPaused = false;
+  document.getElementById('btn-continuar-qr').style.display = 'none';
   if (qrScanner) { qrScanner.stop().then(()=>{ qrScanner.clear(); qrScanner=null; }).catch(()=>{ qrScanner=null; }); }
+}
+
+function resumeQRIfPaused() {
+  if (_qrPaused && qrScanner) {
+    try { qrScanner.resume(); } catch(e) {}
+  }
+  _qrPaused = false;
+  document.getElementById('btn-continuar-qr').style.display = 'none';
+}
+
+// Botão "Continuar Leitura" — fecha o resultado da leitura QR e retoma a câmera
+function continuarQR() {
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('val-input').value = '';
+  resumeQRIfPaused();
 }
 
 // ── SENHAS TABLE ───────────────────────────────────
@@ -1268,7 +1349,7 @@ function renderSenhas() {
     <td><span class="mono">${s.senha}</span></td>
     <td>${s.lote}</td>
     <td>${s.categoria ? `<span class="badge badge-blue" style="font-size:10px">${s.categoria}</span>` : '<span style="color:var(--ink3);font-size:12px">—</span>'}</td>
-    <td>${s.pessoas}</td>
+    <td>${s.pessoas}${(s.pessoasCadastro!=null && s.pessoas!==s.pessoasCadastro) ? `<br><span style="font-size:10px;color:var(--amber)" title="Ajustado pelo operador ${s.pessoasAjustadoPor||''} (cadastrado: ${s.pessoasCadastro})">✏️ cad: ${s.pessoasCadastro}</span>` : ''}</td>
     <td><span class="badge ${s.usada?'badge-green':'badge-blue'}">${s.usada?'Usada':'Livre'}</span></td>
     <td style="text-align:center">${s.brinde?'🎁':'—'}</td>
     <td style="text-align:center">${s.presente?'🎀':'—'}</td>
@@ -1444,9 +1525,9 @@ function exportJSON() {
 }
 
 function exportCSV() {
-  let csv = 'senha,lote,categoria,pessoas,status,brinde,presente,obs,entrada,operador\n';
+  let csv = 'senha,lote,categoria,pessoas,pessoas_cadastrado,ajustado_por,status,brinde,presente,obs,entrada,operador\n';
   db.senhas.forEach(s => {
-    csv += `${s.senha},${s.lote},"${s.categoria||''}",${s.pessoas},${s.usada?'Usada':'Livre'},${s.brinde?'Sim':'Não'},${s.presente?'Sim':'Não'},"${(s.obs||'').replace(/"/g,'""')}","${s.entrada}","${s.operador||''}"\n`;
+    csv += `${s.senha},${s.lote},"${s.categoria||''}",${s.pessoas},${s.pessoasCadastro??s.pessoas},"${s.pessoasAjustadoPor||''}",${s.usada?'Usada':'Livre'},${s.brinde?'Sim':'Não'},${s.presente?'Sim':'Não'},"${(s.obs||'').replace(/"/g,'""')}","${s.entrada}","${s.operador||''}"\n`;
   });
   dlBlob(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}), 'senhas_'+slug()+'.csv');
   showToast('📄 CSV exportado!');
