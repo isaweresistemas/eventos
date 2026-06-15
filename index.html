@@ -328,6 +328,24 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="form-row">
           <div class="form-group"><label>Pessoas por Senha</label><input id="gen-pessoas" type="number" min="1" value="1"></div>
         </div>
+        <div class="form-group">
+          <label>Extras já incluídos neste lote <span style="font-weight:400;color:var(--ink3)">(pré-marcados ao gerar)</span></label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <label style="flex:1;min-width:140px;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2)">
+              <input type="checkbox" id="gen-brinde" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer">
+              🎁 Recebeu Brinde
+            </label>
+            <label style="flex:1;min-width:140px;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2)">
+              <input type="checkbox" id="gen-presente" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer">
+              🎀 Presente
+            </label>
+            <label style="flex:1;min-width:140px;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2)">
+              <input type="checkbox" id="gen-alimento" style="width:18px;height:18px;accent-color:var(--amber);cursor:pointer">
+              🍚 Quilo de Alimento
+            </label>
+            <!-- 🔧 ESPAÇO PARA NOVOS EXTRAS (geração): adicionar novo <label><input type="checkbox" id="gen-NOVOEXTRA"> aqui -->
+          </div>
+        </div>
         <div class="alert alert-green" id="gen-alert"></div>
         <button class="btn btn-primary" onclick="gerarSenhas()">✨ Gerar Senhas</button>
       </div>
@@ -371,6 +389,11 @@ tbody tr:last-child td{border-bottom:none;}
                   <input type="checkbox" id="chk-presente" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" onchange="updateExtraLabel('presente')">
                   🎀 Trouxe Presente
                 </label>
+                <label style="flex:1;min-width:120px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2);transition:border-color .2s" id="lbl-alimento">
+                  <input type="checkbox" id="chk-alimento" style="width:18px;height:18px;accent-color:var(--amber);cursor:pointer" onchange="updateExtraLabel('alimento')">
+                  🍚 Quilo de Alimento
+                </label>
+                <!-- 🔧 ESPAÇO PARA NOVOS EXTRAS (validação): adicionar novo <label id="lbl-NOVOEXTRA"><input type="checkbox" id="chk-NOVOEXTRA" onchange="updateExtraLabel('NOVOEXTRA')"> aqui -->
               </div>
               <div style="position:relative">
                 <textarea id="val-obs" placeholder="Observações (opcional)..." rows="2"
@@ -427,7 +450,7 @@ tbody tr:last-child td{border-bottom:none;}
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Senha</th><th>Lote</th><th>Categoria</th><th>Pessoas</th><th>Status</th><th>Brinde</th><th>Presente</th><th>Obs</th><th>Entrada</th><th>Operador</th><th>QR</th></tr></thead>
+            <thead><tr><th>Senha</th><th>Lote</th><th>Categoria</th><th>Pessoas</th><th>Status</th><th>Brinde</th><th>Presente</th><th>Alimento</th><!-- 🔧 NOVO EXTRA: <th>NomeExtra</th> --><th>Obs</th><th>Entrada</th><th>Operador</th><th>QR</th></tr></thead>
             <tbody id="senhas-tbody"></tbody>
           </table>
         </div>
@@ -1130,6 +1153,11 @@ function gerarSenhas() {
   const pessoas   = parseInt(document.getElementById('gen-pessoas').value) || 1;
   const prefix    = document.getElementById('gen-prefix').value.trim().toUpperCase();
   const categoria = document.getElementById('gen-categoria').value.trim();
+  // Extras pré-marcados para este lote
+  const defBrinde   = document.getElementById('gen-brinde').checked;
+  const defPresente = document.getElementById('gen-presente').checked;
+  const defAlimento = document.getElementById('gen-alimento').checked;
+  // 🔧 ESPAÇO PARA NOVOS EXTRAS (geração): ler o checkbox aqui, ex: const defNOVOEXTRA = document.getElementById('gen-NOVOEXTRA').checked;
   if (!lote) { showToast('❌ Informe o nome do lote', true); return; }
   if (qtd < 1 || qtd > 10000) { showToast('❌ Quantidade entre 1 e 10.000', true); return; }
 
@@ -1139,7 +1167,8 @@ function gerarSenhas() {
   while (novas.length < qtd && tentativas < qtd * 10) {
     tentativas++;
     const code = prefix + gerarCodigo(prefix ? 8 - prefix.length : 8);
-    if (!existentes.has(code)) { existentes.add(code); novas.push({ senha: code, lote, categoria, pessoas, pessoasCadastro: pessoas, usada: false, entrada: '', operador: '', brinde: false, presente: false, obs: '' }); }
+    if (!existentes.has(code)) { existentes.add(code); novas.push({ senha: code, lote, categoria, pessoas, pessoasCadastro: pessoas, usada: false, entrada: '', operador: '', brinde: defBrinde, presente: defPresente, alimento: defAlimento, obs: '' }); }
+    // 🔧 ESPAÇO PARA NOVOS EXTRAS (geração): incluir o campo no objeto acima, ex: alimento: defAlimento, novoExtra: defNOVOEXTRA
   }
   db.senhas.push(...novas);
   saveDB();
@@ -1187,12 +1216,12 @@ function validarSenha() {
   } else if (s.usada) {
     box.className='result-box result-err'; icon.textContent='⛔';
     title.textContent='Já Utilizada';
-    info.textContent=`Entrada: ${s.entrada}${s.operador?' · '+s.operador:''}${s.brinde?' · 🎁 Brinde':''}${s.presente?' · 🎀 Presente':''}`;
+    info.textContent=`Entrada: ${s.entrada}${s.operador?' · '+s.operador:''}${s.brinde?' · 🎁 Brinde':''}${s.presente?' · 🎀 Presente':''}${s.alimento?' · 🍚 Alimento':''}`;
     showToast('⛔ Senha já utilizada!', true);
   } else {
     const now = new Date().toLocaleString('pt-BR');
     s.usada = true; s.entrada = now; s.operador = currentOperador;
-    s.brinde = false; s.presente = false; s.obs = '';
+    s.brinde = false; s.presente = false; s.alimento = false; s.obs = '';
     _senhaAtual = s;
     db.historico.unshift({ senha: input, hora: now, pax: s.pessoas, lote: s.lote, categoria: s.categoria||'', op: currentOperador, brinde: false, presente: false, obs: '' });
     sessionValidations++;
@@ -1201,11 +1230,16 @@ function validarSenha() {
     title.textContent='Entrada Liberada!';
     info.textContent=`${s.lote}${s.categoria?' · '+s.categoria:''} · ${s.pessoas} pessoa(s) · ${currentOperador}`;
     // Resetar checkboxes e obs
-    document.getElementById('chk-brinde').checked   = false;
-    document.getElementById('chk-presente').checked = false;
+    // Pré-marcar checkboxes com os valores definidos na geração do lote
+    document.getElementById('chk-brinde').checked   = !!s.brinde;
+    document.getElementById('chk-presente').checked = !!s.presente;
+    document.getElementById('chk-alimento').checked = !!s.alimento;
+    // 🔧 ESPAÇO PARA NOVOS EXTRAS (pré-marcar na validação): document.getElementById('chk-NOVOEXTRA').checked = !!s.novoExtra;
+    updateExtraLabel('brinde');
+    updateExtraLabel('presente');
+    updateExtraLabel('alimento');
+    // 🔧 ESPAÇO PARA NOVOS EXTRAS (atualizar visual): updateExtraLabel('NOVOEXTRA');
     document.getElementById('val-obs').value = '';
-    document.getElementById('lbl-brinde').style.borderColor   = 'var(--border)';
-    document.getElementById('lbl-presente').style.borderColor = 'var(--border)';
     // Ajuste de pessoas: parte do valor cadastrado, operador pode +/- na hora
     if (s.pessoasCadastro == null) s.pessoasCadastro = s.pessoas || 1; // compatibilidade com senhas antigas
     _pessoasAtual = s.pessoas || 1;
@@ -1236,26 +1270,31 @@ function updateExtraLabel(tipo) {
 }
 
 function confirmarExtras() {
-  const brinde  = document.getElementById('chk-brinde').checked;
-  const presente= document.getElementById('chk-presente').checked;
-  const obs     = document.getElementById('val-obs').value.trim();
+  const brinde   = document.getElementById('chk-brinde').checked;
+  const presente = document.getElementById('chk-presente').checked;
+  const alimento = document.getElementById('chk-alimento').checked;
+  // 🔧 ESPAÇO PARA NOVOS EXTRAS (confirmar): const novoExtra = document.getElementById('chk-NOVOEXTRA').checked;
+  const obs      = document.getElementById('val-obs').value.trim();
   if (_senhaAtual) {
-    _senhaAtual.brinde  = brinde;
-    _senhaAtual.presente= presente;
-    _senhaAtual.obs     = obs;
-    _senhaAtual.pessoas = _pessoasAtual; // ajuste feito pelo operador na hora
+    _senhaAtual.brinde   = brinde;
+    _senhaAtual.presente = presente;
+    _senhaAtual.alimento = alimento;
+    // 🔧 ESPAÇO PARA NOVOS EXTRAS (salvar na senha): _senhaAtual.novoExtra = novoExtra;
+    _senhaAtual.obs      = obs;
+    _senhaAtual.pessoas  = _pessoasAtual;
     _senhaAtual.pessoasAjustadoPor = (_pessoasAtual !== _senhaAtual.pessoasCadastro) ? currentOperador : '';
-    // Atualiza também no histórico (última entrada)
     if (db.historico.length) {
       const h = db.historico.find(h => h.senha === _senhaAtual.senha);
-      if (h) { h.brinde = brinde; h.presente = presente; h.obs = obs; h.pax = _pessoasAtual; h.paxCadastro = _senhaAtual.pessoasCadastro; }
+      if (h) { h.brinde = brinde; h.presente = presente; h.alimento = alimento; h.obs = obs; h.pax = _pessoasAtual; h.paxCadastro = _senhaAtual.pessoasCadastro; }
+      // 🔧 ESPAÇO PARA NOVOS EXTRAS (histórico): h.novoExtra = novoExtra;
     }
     saveDB();
     updateOfflineTab();
     const extras = [];
-    if (brinde) extras.push('🎁 Brinde');
+    if (brinde)   extras.push('🎁 Brinde');
     if (presente) extras.push('🎀 Presente');
-    if (obs) extras.push('📝 ' + obs);
+    if (alimento) extras.push('🍚 Alimento');
+    // 🔧 ESPAÇO PARA NOVOS EXTRAS (toast): if (novoExtra) extras.push('emoji NomeExtra');
     if (extras.length) showToast('💾 ' + extras.join(' · '));
   }
   _senhaAtual = null;
@@ -1353,6 +1392,8 @@ function renderSenhas() {
     <td><span class="badge ${s.usada?'badge-green':'badge-blue'}">${s.usada?'Usada':'Livre'}</span></td>
     <td style="text-align:center">${s.brinde?'🎁':'—'}</td>
     <td style="text-align:center">${s.presente?'🎀':'—'}</td>
+    <td style="text-align:center">${s.alimento?'🍚':'—'}</td>
+    <!-- 🔧 ESPAÇO PARA NOVOS EXTRAS (tabela): <td style="text-align:center">${s.novoExtra?'emoji':'—'}</td> -->
     <td style="font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(s.obs||'').replace(/"/g,'&quot;')}">${s.obs||'—'}</td>
     <td style="font-size:12px">${s.entrada||'—'}</td>
     <td style="font-size:12px">${s.operador||'—'}</td>
@@ -1419,6 +1460,8 @@ function renderHistorico() {
     </div>
     ${h.brinde?'<span style="font-size:14px" title="Recebeu brinde">🎁</span>':''}
     ${h.presente?'<span style="font-size:14px" title="Trouxe presente">🎀</span>':''}
+    ${h.alimento?'<span style="font-size:14px" title="Quilo de alimento">🍚</span>':''}
+    <!-- 🔧 NOVO EXTRA (histórico): ${h.novoExtra?'<span title="NomeExtra">emoji</span>':''} -->
     ${h.op?`<span class="hist-op">👤 ${h.op}</span>`:''}
     <span class="hist-pax">+${h.pax||1} pessoa(s)</span>
   </div>`).join('');
@@ -1525,9 +1568,11 @@ function exportJSON() {
 }
 
 function exportCSV() {
-  let csv = 'senha,lote,categoria,pessoas,pessoas_cadastrado,ajustado_por,status,brinde,presente,obs,entrada,operador\n';
+  let csv = 'senha,lote,categoria,pessoas,pessoas_cadastrado,ajustado_por,status,brinde,presente,alimento,obs,entrada,operador\n';
+  // 🔧 NOVO EXTRA (CSV header): adicionar ,nomeExtra antes de ,obs
   db.senhas.forEach(s => {
-    csv += `${s.senha},${s.lote},"${s.categoria||''}",${s.pessoas},${s.pessoasCadastro??s.pessoas},"${s.pessoasAjustadoPor||''}",${s.usada?'Usada':'Livre'},${s.brinde?'Sim':'Não'},${s.presente?'Sim':'Não'},"${(s.obs||'').replace(/"/g,'""')}","${s.entrada}","${s.operador||''}"\n`;
+    csv += `${s.senha},${s.lote},"${s.categoria||''}",${s.pessoas},${s.pessoasCadastro??s.pessoas},"${s.pessoasAjustadoPor||''}",${s.usada?'Usada':'Livre'},${s.brinde?'Sim':'Não'},${s.presente?'Sim':'Não'},${s.alimento?'Sim':'Não'},"${(s.obs||'').replace(/"/g,'""')}","${s.entrada}","${s.operador||''}"\n`;
+    // 🔧 NOVO EXTRA (CSV row): adicionar ,${s.novoExtra?'Sim':'Não'} antes de ,"${(s.obs...
   });
   dlBlob(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}), 'senhas_'+slug()+'.csv');
   showToast('📄 CSV exportado!');
