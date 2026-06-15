@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Cache busting: v20260612_001 -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Isawere Eventos Pro</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -10,7 +14,7 @@
 :root {
   --ink:#0f172a;--ink2:#334155;--ink3:#64748b;
   --surface:#ffffff;--bg:#f8fafc;--border:#e2e8f0;
-  --accent:#2563eb;--accent2:#1d4ed8;--accent-bg:#eff6ff;
+  --accent:#2563eb;--accent2:#1d4ed8;
   --green:#16a34a;--green-bg:#dcfce7;
   --red:#dc2626;--red-bg:#fee2e2;
   --amber:#d97706;--amber-bg:#fef3c7;
@@ -311,31 +315,6 @@ tbody tr:last-child td{border-bottom:none;}
 
     <!-- GERAR SENHAS -->
     <div id="tab-gerar" class="tab-content">
-      <div class="grid-2" style="margin-bottom:16px">
-        <div class="card">
-          <div class="card-title">⚡ Geração Rápida — Senha na Hora</div>
-          <p style="font-size:13px;color:var(--ink3);margin-bottom:16px">
-            Use estes botões na portaria para criar uma senha avulsa em segundos —
-            ideal para quando alguém esquece o convite (<strong>Extra</strong>) ou
-            quando uma autoridade chega sem ingresso (<strong>VIP</strong>). A senha já é
-            gerada, validada e registrada automaticamente.
-          </p>
-          <div class="btn-row">
-            <button class="btn btn-amber" style="flex:1;color:#fff" onclick="gerarSenhaRapida('Extra','📋 Extra')">📋 Gerar senha EXTRA</button>
-            <button class="btn btn-primary" style="flex:1" onclick="gerarSenhaRapida('VIP','⭐ VIP')">⭐ Gerar senha VIP</button>
-          </div>
-          <div class="alert alert-green" id="gen-rapida-alert" style="margin-top:12px"></div>
-        </div>
-        <div class="card" style="background:var(--bg)">
-          <div class="card-title">ℹ️ Como funciona a Geração Rápida</div>
-          <p style="font-size:13px;color:var(--ink2);line-height:1.8">
-            • <strong>Extra</strong>: gera 1 senha no lote "Extra", já marcada como <strong>usada</strong> e registrada no histórico — para quem chegou sem convite mas precisa entrar.<br><br>
-            • <strong>VIP</strong>: gera 1 senha no lote "VIP", já marcada como <strong>usada</strong> e registrada no histórico — para autoridades que chegam sem ingresso impresso.<br><br>
-            Ambas aparecem normalmente na aba <strong>Senhas</strong> e no <strong>Histórico</strong>, com o código gerado, o operador responsável e horário.
-          </p>
-        </div>
-      </div>
-
       <div class="card" style="max-width:560px">
         <div class="card-title">🎫 Gerar Lote de Senhas</div>
         <div class="form-row">
@@ -356,7 +335,7 @@ tbody tr:last-child td{border-bottom:none;}
 
     <!-- VALIDAR -->
     <div id="tab-validar" class="tab-content">
-      <div class="grid-2" style="max-width:900px">
+      <div style="max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
         <div class="card">
           <div class="card-title">⌨️ Digitar Senha</div>
           <div class="validate-big">
@@ -371,10 +350,28 @@ tbody tr:last-child td{border-bottom:none;}
             <span class="result-icon" id="result-icon"></span>
             <div class="result-title" id="result-title"></div>
             <div class="result-info" id="result-info"></div>
+            <button class="btn btn-secondary" id="btn-continuar-qr" style="display:none;width:100%;margin-top:14px;font-size:15px;padding:14px" onclick="continuarQR()">▶️ Continuar Leitura (Próximo)</button>
             <!-- campos extras — aparecem só na entrada OK -->
             <div id="extras-box" style="display:none;margin-top:16px;text-align:left;border-top:1.5px solid rgba(22,163,74,.3);padding-top:14px">
-              <!-- Checkboxes de itens extras são gerados dinamicamente pelo JS a partir do array EXTRA_ITEMS -->
-              <div id="extras-checkboxes" style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px">
+                <span style="font-size:14px;font-weight:600;color:var(--ink2)">👥 Pessoas nesta entrada</span>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <button type="button" class="btn btn-secondary" style="padding:6px 14px;font-size:18px;font-weight:700;line-height:1" onclick="ajustarPessoas(-1)">−</button>
+                  <span id="val-pessoas" style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;min-width:32px;text-align:center;display:inline-block">1</span>
+                  <button type="button" class="btn btn-secondary" style="padding:6px 14px;font-size:18px;font-weight:700;line-height:1" onclick="ajustarPessoas(1)">+</button>
+                </div>
+              </div>
+              <div style="font-size:11px;color:var(--ink3);margin:-2px 0 10px 2px">Cadastrado: <strong id="val-pessoas-cadastrado">1</strong> · ajuste se o número mudou na hora</div>
+              <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+                <label style="flex:1;min-width:120px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2);transition:border-color .2s" id="lbl-brinde">
+                  <input type="checkbox" id="chk-brinde" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer" onchange="updateExtraLabel('brinde')">
+                  🎁 Recebeu Brinde
+                </label>
+                <label style="flex:1;min-width:120px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2);transition:border-color .2s" id="lbl-presente">
+                  <input type="checkbox" id="chk-presente" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" onchange="updateExtraLabel('presente')">
+                  🎀 Trouxe Presente
+                </label>
+              </div>
               <div style="position:relative">
                 <textarea id="val-obs" placeholder="Observações (opcional)..." rows="2"
                   style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;outline:none;resize:vertical;transition:border-color .2s"
@@ -415,14 +412,22 @@ tbody tr:last-child td{border-bottom:none;}
           <select id="filter-categoria" onchange="senhasPage=0;renderSenhas()">
             <option value="all">Todas as categorias</option>
           </select>
-          <!-- Filtros dos itens extras (Brinde, Presente, Kilo de Alimento, etc.) gerados dinamicamente via EXTRA_ITEMS -->
-          <span id="extra-filters-container" style="display:flex;gap:8px;flex-wrap:wrap"></span>
+          <select id="filter-brinde" onchange="senhasPage=0;renderSenhas()">
+            <option value="all">Brinde: todos</option>
+            <option value="sim">🎁 Recebeu brinde</option>
+            <option value="nao">Sem brinde</option>
+          </select>
+          <select id="filter-presente" onchange="senhasPage=0;renderSenhas()">
+            <option value="all">Presente: todos</option>
+            <option value="sim">🎀 Trouxe presente</option>
+            <option value="nao">Sem presente</option>
+          </select>
           <button class="btn btn-secondary" onclick="exportCSV()">📄 CSV</button>
           <button class="btn btn-secondary" onclick="exportJSON()">📦 JSON</button>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr id="senhas-thead-row"><th>Senha</th><th>Lote</th><th>Categoria</th><th>Pessoas</th><th>Status</th><th>Obs</th><th>Entrada</th><th>Operador</th><th>QR</th></tr></thead>
+            <thead><tr><th>Senha</th><th>Lote</th><th>Categoria</th><th>Pessoas</th><th>Status</th><th>Brinde</th><th>Presente</th><th>Obs</th><th>Entrada</th><th>Operador</th><th>QR</th></tr></thead>
             <tbody id="senhas-tbody"></tbody>
           </table>
         </div>
@@ -508,22 +513,19 @@ tbody tr:last-child td{border-bottom:none;}
     <div id="tab-sincronizacao" class="tab-content">
       <div class="grid-2">
         <div class="card">
-          <div class="card-title">☁️ Configurar Google Sheets</div>
-          <div class="sheets-setup-box">
-            <h4>📋 Como configurar (1 vez só — 5 min)</h4>
-            <p><span class="step-num">1</span>Abra sua planilha Google em branco</p>
-            <p><span class="step-num">2</span>Menu <strong>Extensões → Apps Script</strong></p>
-            <p><span class="step-num">3</span>Apague o código existente e cole o arquivo <code>codigo_apps_script.gs</code> que você baixou</p>
-            <p><span class="step-num">4</span>Clique em <strong>Implantar → Nova Implantação</strong></p>
-            <p><span class="step-num">5</span>Tipo: <strong>App da Web</strong> | Executar como: <strong>Eu</strong> | Acesso: <strong>Qualquer pessoa</strong></p>
-            <p><span class="step-num">6</span>Copie a <strong>URL da implantação</strong> e cole abaixo</p>
-            <p style="margin-top:8px;font-size:12px;color:var(--ink3)">✅ Todos os operadores usam a <strong>mesma URL</strong>. Dados sincronizados em tempo real a cada 10s.</p>
+          <div class="card-title">☁️ Google Sheets</div>
+          <div class="form-group">
+            <label>URL do Apps Script (Web App)</label>
+            <div style="display:flex;gap:8px">
+              <input id="sheets-url" type="url" readonly placeholder="Nenhuma URL configurada"
+                style="background:var(--bg);color:var(--ink2);cursor:not-allowed">
+              <button class="btn btn-secondary" style="white-space:nowrap" onclick="confirmarEditarSheetsUrl()">✏️ Editar Link</button>
+            </div>
+            <p style="font-size:12px;color:var(--ink3);margin-top:8px">Todos os operadores usam a mesma URL. Dados sincronizados automaticamente a cada 10s.</p>
           </div>
-          <div class="form-group"><label>URL do Apps Script (Web App)</label><input id="sheets-url" placeholder="https://script.google.com/macros/s/...../exec" type="url"></div>
           <div class="alert alert-blue" id="sheets-alert" style="margin-bottom:12px"></div>
           <div class="btn-row">
-            <button class="btn btn-primary" style="flex:1" onclick="salvarConfigSheets()">💾 Salvar e Conectar</button>
-            <button class="btn btn-secondary" onclick="testarConexaoSheets()">🔌 Testar</button>
+            <button class="btn btn-primary" style="flex:1" onclick="testarConexaoSheets()">🔌 Testar Conexão</button>
           </div>
         </div>
         <div class="card">
@@ -661,6 +663,20 @@ tbody tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<div class="modal-overlay" id="modal-sheets-url">
+  <div class="modal">
+    <div style="font-size:48px">🔗</div>
+    <h3>Editar Link do Google Sheets</h3>
+    <p>Informe a nova URL do Apps Script (Web App) e a senha do administrador para confirmar.</p>
+    <div class="form-group"><label>Nova URL do Apps Script</label><input type="url" id="sheets-url-new" placeholder="https://script.google.com/macros/s/...../exec"></div>
+    <div class="form-group"><label>Senha do administrador</label><input type="password" id="sheets-url-pwd" placeholder="Senha" onkeyup="if(event.key==='Enter')doSalvarSheetsUrl()"></div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeModal('modal-sheets-url')">Cancelar</button>
+      <button class="btn btn-primary" onclick="doSalvarSheetsUrl()">💾 Salvar Link</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" onerror="console.warn('QRCode CDN failed')"></script>
@@ -680,27 +696,6 @@ const MAX_BACKUPS   = 20;
 const PAGE_SIZE     = 50;
 const SESSION_TTL   = 8 * 60 * 60 * 1000;
 const SYNC_INTERVAL = 10000; // 10s
-
-// ════════════════════════════════════════════════════
-//  ITENS EXTRAS DA VALIDAÇÃO
-//  Cada item aqui gera automaticamente um checkbox na
-//  tela de Validação, uma coluna na tabela de Senhas,
-//  uma coluna no CSV exportado e um ícone no Histórico.
-//
-//  Para adicionar um novo item, basta inserir um novo
-//  objeto no array abaixo, seguindo o mesmo formato:
-//  { key: 'identificador_unico', label: 'Texto do botão', icon: 'emoji', color: 'green'|'accent'|'amber'|'red' }
-//
-//  Exemplo de novo item:
-//  { key: 'kit_higiene', label: 'Recebeu Kit Higiene', icon: '🧼', color: 'accent' }
-// ════════════════════════════════════════════════════
-const EXTRA_ITEMS = [
-  { key: 'brinde',   label: 'Recebeu Brinde',     icon: '🎁', color: 'green'  },
-  { key: 'presente', label: 'Trouxe Presente',    icon: '🎀', color: 'accent' },
-  { key: 'alimento', label: 'Trouxe Kilo de Alimento', icon: '🥫', color: 'amber'  }
-  // 👉 Adicione novos itens aqui, exatamente neste formato:
-  // { key: 'novo_item', label: 'Texto do item', icon: '✨', color: 'accent' },
-];
 
 // ── SAFE STORAGE ──────────────────────────────────
 const safeStorage = (() => {
@@ -782,6 +777,23 @@ function salvarConfigSheets() {
   saveSheetsCfg({ url });
   showSheetsAlert('💾 URL salva! Testando conexão...', 'blue');
   testarConexaoSheets();
+}
+
+function confirmarEditarSheetsUrl() {
+  document.getElementById('sheets-url-new').value = document.getElementById('sheets-url').value || '';
+  document.getElementById('sheets-url-pwd').value = '';
+  openModal('modal-sheets-url');
+}
+
+function doSalvarSheetsUrl() {
+  if (document.getElementById('sheets-url-pwd').value !== ADM_PASS) { showToast('❌ Senha incorreta', true); return; }
+  const url = document.getElementById('sheets-url-new').value.trim();
+  if (!url || !url.startsWith('https://script.google.com')) {
+    showToast('⚠️ Cole a URL correta do Apps Script (começa com https://script.google.com)', true); return;
+  }
+  document.getElementById('sheets-url').value = url;
+  closeModal('modal-sheets-url');
+  salvarConfigSheets();
 }
 
 function showSheetsAlert(msg, color) {
@@ -869,8 +881,6 @@ async function pullFromSheets() {
           s.usada = true;
           s.entrada = localMap[s.senha].entrada;
           s.operador = localMap[s.senha].operador;
-          s.obs = localMap[s.senha].obs || '';
-          EXTRA_ITEMS.forEach(item => { s[item.key] = !!localMap[s.senha][item.key]; });
         }
       });
       // Merge histórico
@@ -1129,7 +1139,7 @@ function gerarSenhas() {
   while (novas.length < qtd && tentativas < qtd * 10) {
     tentativas++;
     const code = prefix + gerarCodigo(prefix ? 8 - prefix.length : 8);
-    if (!existentes.has(code)) { existentes.add(code); novas.push(criarSenhaObj(code, lote, categoria, pessoas)); }
+    if (!existentes.has(code)) { existentes.add(code); novas.push({ senha: code, lote, categoria, pessoas, pessoasCadastro: pessoas, usada: false, entrada: '', operador: '', brinde: false, presente: false, obs: '' }); }
   }
   db.senhas.push(...novas);
   saveDB();
@@ -1138,13 +1148,6 @@ function gerarSenhas() {
   el.className = 'alert alert-green';
   el.textContent = `✅ ${novas.length} senhas geradas para o lote "${lote}"${categoria?' — Categoria: '+categoria:''}!`;
   showToast(`🎫 ${novas.length} senhas criadas!`);
-}
-
-// Cria o objeto padrão de uma senha, já com todos os itens extras (EXTRA_ITEMS) inicializados como false
-function criarSenhaObj(code, lote, categoria, pessoas) {
-  const obj = { senha: code, lote, categoria: categoria||'', pessoas, usada: false, entrada: '', operador: '', obs: '' };
-  EXTRA_ITEMS.forEach(item => { obj[item.key] = false; });
-  return obj;
 }
 
 function gerarCodigo(len) {
@@ -1157,56 +1160,10 @@ function gerarCodigo(len) {
   return c;
 }
 
-// ── GERAÇÃO RÁPIDA (Extra / VIP) ──────────────────
-// Gera uma senha avulsa, já marcada como usada e registrada no histórico
-// — para situações de portaria: alguém esqueceu o convite (Extra) ou
-// uma autoridade chegou sem ingresso (VIP).
-function gerarSenhaRapida(lote, label) {
-  const existentes = new Set(db.senhas.map(s => s.senha));
-  let code;
-  do { code = lote.toUpperCase().slice(0,3) + '-' + gerarCodigo(4); } while (existentes.has(code));
-
-  const now = new Date().toLocaleString('pt-BR');
-  const novaSenha = criarSenhaObj(code, lote, '', 1);
-  novaSenha.usada    = true;
-  novaSenha.entrada  = now;
-  novaSenha.operador = currentOperador;
-  db.senhas.push(novaSenha);
-
-  const histItem = { senha: code, hora: now, pax: 1, lote, categoria: '', op: currentOperador, obs: '' };
-  EXTRA_ITEMS.forEach(item => { histItem[item.key] = false; });
-  db.historico.unshift(histItem);
-  sessionValidations++;
-
-  saveDB();
-  updateOfflineTab();
-
-  const el = document.getElementById('gen-rapida-alert');
-  el.style.display = 'block';
-  el.className = 'alert alert-green';
-  el.innerHTML = `✅ Senha ${label} gerada e liberada: <span class="mono" style="font-size:16px">${code}</span>`;
-  showToast(`✅ Senha ${label} criada e liberada: ${code}`);
-}
-
 // ── VALIDAR ───────────────────────────────────────
 let _senhaAtual = null; // referência da senha validada aguardando confirmação extras
-
-// Renderiza os checkboxes de itens extras dinamicamente a partir de EXTRA_ITEMS
-function renderExtraCheckboxes() {
-  const cont = document.getElementById('extras-checkboxes');
-  cont.innerHTML = EXTRA_ITEMS.map(item => `
-    <label style="flex:1;min-width:120px;display:flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2);transition:border-color .2s,background .2s" id="lbl-${item.key}">
-      <input type="checkbox" id="chk-${item.key}" data-key="${item.key}" data-color="${item.color}" style="width:18px;height:18px;accent-color:var(--${item.color});cursor:pointer" onchange="updateExtraLabel('${item.key}')">
-      ${item.icon} ${item.label}
-    </label>`).join('');
-}
-
-function buildExtraSummary(obj, sep) {
-  // Monta um resumo textual (ex: "🎁 Brinde · 🎀 Presente") com base no objeto extras salvo
-  sep = sep || ' · ';
-  const parts = EXTRA_ITEMS.filter(item => obj && obj[item.key]).map(item => item.icon + ' ' + item.label);
-  return parts.join(sep);
-}
+let _pessoasAtual = 1;  // quantidade de pessoas ajustável na validação atual
+let _qrPaused = false;  // true quando o scanner QR está pausado aguardando o operador
 
 function validarSenha() {
   const input = document.getElementById('val-input').value.trim().toUpperCase();
@@ -1216,6 +1173,7 @@ function validarSenha() {
   const title= document.getElementById('result-title');
   const info = document.getElementById('result-info');
   const extrasBox = document.getElementById('extras-box');
+  const btnContinuarQR = document.getElementById('btn-continuar-qr');
 
   const s = db.senhas.find(x => x.senha === input);
   box.style.display = 'block';
@@ -1229,69 +1187,74 @@ function validarSenha() {
   } else if (s.usada) {
     box.className='result-box result-err'; icon.textContent='⛔';
     title.textContent='Já Utilizada';
-    const extrasResumo = buildExtraSummary(s);
-    info.textContent=`Entrada: ${s.entrada}${s.operador?' · '+s.operador:''}${extrasResumo?' · '+extrasResumo:''}`;
+    info.textContent=`Entrada: ${s.entrada}${s.operador?' · '+s.operador:''}${s.brinde?' · 🎁 Brinde':''}${s.presente?' · 🎀 Presente':''}`;
     showToast('⛔ Senha já utilizada!', true);
   } else {
     const now = new Date().toLocaleString('pt-BR');
     s.usada = true; s.entrada = now; s.operador = currentOperador;
-    // Inicializa todos os itens extras como false
-    EXTRA_ITEMS.forEach(item => { s[item.key] = false; });
-    s.obs = '';
+    s.brinde = false; s.presente = false; s.obs = '';
     _senhaAtual = s;
-    const histItem = { senha: input, hora: now, pax: s.pessoas, lote: s.lote, categoria: s.categoria||'', op: currentOperador, obs: '' };
-    EXTRA_ITEMS.forEach(item => { histItem[item.key] = false; });
-    db.historico.unshift(histItem);
+    db.historico.unshift({ senha: input, hora: now, pax: s.pessoas, lote: s.lote, categoria: s.categoria||'', op: currentOperador, brinde: false, presente: false, obs: '' });
     sessionValidations++;
     // Mostrar box de confirmação + campos extras
     box.className='result-box result-ok'; icon.textContent='✅';
     title.textContent='Entrada Liberada!';
     info.textContent=`${s.lote}${s.categoria?' · '+s.categoria:''} · ${s.pessoas} pessoa(s) · ${currentOperador}`;
-    // Renderizar e resetar checkboxes dinamicamente
-    renderExtraCheckboxes();
-    EXTRA_ITEMS.forEach(item => {
-      document.getElementById('chk-'+item.key).checked = false;
-      const lbl = document.getElementById('lbl-'+item.key);
-      lbl.style.borderColor = 'var(--border)';
-      lbl.style.background  = '#fff';
-    });
+    // Resetar checkboxes e obs
+    document.getElementById('chk-brinde').checked   = false;
+    document.getElementById('chk-presente').checked = false;
     document.getElementById('val-obs').value = '';
+    document.getElementById('lbl-brinde').style.borderColor   = 'var(--border)';
+    document.getElementById('lbl-presente').style.borderColor = 'var(--border)';
+    // Ajuste de pessoas: parte do valor cadastrado, operador pode +/- na hora
+    if (s.pessoasCadastro == null) s.pessoasCadastro = s.pessoas || 1; // compatibilidade com senhas antigas
+    _pessoasAtual = s.pessoas || 1;
+    document.getElementById('val-pessoas').textContent = _pessoasAtual;
+    document.getElementById('val-pessoas-cadastrado').textContent = s.pessoasCadastro;
     extrasBox.style.display = 'block';
     showToast(`✅ Entrada liberada! (${s.pessoas} pessoa${s.pessoas>1?'s':''})`, false);
     // NÃO limpa input ainda — espera confirmarExtras ou timeout
     saveDB();
     updateOfflineTab();
   }
+
+  // Se a validação veio do scanner QR (pausado), mostra botão para continuar a leitura
+  // (não mostra junto com o extras-box, que já tem seu próprio botão "Salvar e Próximo")
+  btnContinuarQR.style.display = (_qrPaused && extrasBox.style.display === 'none') ? 'block' : 'none';
 }
 
-function updateExtraLabel(key) {
-  const chk = document.getElementById('chk-'+key);
-  const lbl = document.getElementById('lbl-'+key);
-  const color = chk.dataset.color || 'green';
-  lbl.style.borderColor = chk.checked ? `var(--${color})` : 'var(--border)';
-  lbl.style.background  = chk.checked ? `var(--${color}-bg)` : '#fff';
+function ajustarPessoas(delta) {
+  _pessoasAtual = Math.max(1, _pessoasAtual + delta);
+  document.getElementById('val-pessoas').textContent = _pessoasAtual;
+}
+
+function updateExtraLabel(tipo) {
+  const chk = document.getElementById('chk-'+tipo);
+  const lbl = document.getElementById('lbl-'+tipo);
+  lbl.style.borderColor = chk.checked ? 'var(--green)' : 'var(--border)';
+  lbl.style.background  = chk.checked ? 'var(--green-bg)' : '#fff';
 }
 
 function confirmarExtras() {
-  const obs = document.getElementById('val-obs').value.trim();
+  const brinde  = document.getElementById('chk-brinde').checked;
+  const presente= document.getElementById('chk-presente').checked;
+  const obs     = document.getElementById('val-obs').value.trim();
   if (_senhaAtual) {
-    const extrasMarcados = [];
-    EXTRA_ITEMS.forEach(item => {
-      const checked = document.getElementById('chk-'+item.key).checked;
-      _senhaAtual[item.key] = checked;
-      if (checked) extrasMarcados.push(item.icon + ' ' + item.label);
-    });
-    _senhaAtual.obs = obs;
+    _senhaAtual.brinde  = brinde;
+    _senhaAtual.presente= presente;
+    _senhaAtual.obs     = obs;
+    _senhaAtual.pessoas = _pessoasAtual; // ajuste feito pelo operador na hora
+    _senhaAtual.pessoasAjustadoPor = (_pessoasAtual !== _senhaAtual.pessoasCadastro) ? currentOperador : '';
     // Atualiza também no histórico (última entrada)
     if (db.historico.length) {
       const h = db.historico.find(h => h.senha === _senhaAtual.senha);
-      if (h) {
-        EXTRA_ITEMS.forEach(item => { h[item.key] = _senhaAtual[item.key]; });
-        h.obs = obs;
-      }
+      if (h) { h.brinde = brinde; h.presente = presente; h.obs = obs; h.pax = _pessoasAtual; h.paxCadastro = _senhaAtual.pessoasCadastro; }
     }
     saveDB();
-    const extras = [...extrasMarcados];
+    updateOfflineTab();
+    const extras = [];
+    if (brinde) extras.push('🎁 Brinde');
+    if (presente) extras.push('🎀 Presente');
     if (obs) extras.push('📝 ' + obs);
     if (extras.length) showToast('💾 ' + extras.join(' · '));
   }
@@ -1300,16 +1263,22 @@ function confirmarExtras() {
   document.getElementById('result-box').style.display = 'none';
   document.getElementById('val-input').value = '';
   document.getElementById('val-input').focus();
+  resumeQRIfPaused();
 }
 
 // ── QR ────────────────────────────────────────────
 function startQR() {
   if (!window.Html5Qrcode) { showToast('⚠️ Scanner não disponível offline', true); return; }
   if (qrScanner) { qrScanner.stop().catch(()=>{}); }
+  _qrPaused = false;
+  document.getElementById('btn-continuar-qr').style.display = 'none';
   qrScanner = new Html5Qrcode('qr-reader');
   qrScanner.start({ facingMode: 'environment' },
     { fps: 10, qrbox: { width: 250, height: 250 } },
     code => {
+      // Pausa a câmera para dar tempo ao operador de visualizar o resultado
+      if (qrScanner) { try { qrScanner.pause(true); } catch(e) {} }
+      _qrPaused = true;
       document.getElementById('val-input').value = code.toUpperCase();
       validarSenha();
     }, () => {}
@@ -1317,7 +1286,24 @@ function startQR() {
 }
 
 function stopQR() {
+  _qrPaused = false;
+  document.getElementById('btn-continuar-qr').style.display = 'none';
   if (qrScanner) { qrScanner.stop().then(()=>{ qrScanner.clear(); qrScanner=null; }).catch(()=>{ qrScanner=null; }); }
+}
+
+function resumeQRIfPaused() {
+  if (_qrPaused && qrScanner) {
+    try { qrScanner.resume(); } catch(e) {}
+  }
+  _qrPaused = false;
+  document.getElementById('btn-continuar-qr').style.display = 'none';
+}
+
+// Botão "Continuar Leitura" — fecha o resultado da leitura QR e retoma a câmera
+function continuarQR() {
+  document.getElementById('result-box').style.display = 'none';
+  document.getElementById('val-input').value = '';
+  resumeQRIfPaused();
 }
 
 // ── SENHAS TABLE ───────────────────────────────────
@@ -1331,34 +1317,6 @@ function populateLoteFilter() {
     const cats = [...new Set(db.senhas.map(s=>s.categoria||'').filter(Boolean))];
     selCat.innerHTML = '<option value="all">Todas as categorias</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
   }
-
-  // Gera um filtro <select> para cada item extra (Brinde, Presente, Kilo de Alimento, etc.)
-  const extraFiltersCont = document.getElementById('extra-filters-container');
-  if (extraFiltersCont) {
-    extraFiltersCont.innerHTML = EXTRA_ITEMS.map(item => `
-      <select id="filter-${item.key}" onchange="senhasPage=0;renderSenhas()" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-family:inherit;outline:none;font-size:14px">
-        <option value="all">${item.label}: todos</option>
-        <option value="sim">${item.icon} ${item.label}</option>
-        <option value="nao">Sem ${item.label.toLowerCase()}</option>
-      </select>`).join('');
-  }
-
-  // Gera as colunas extras no cabeçalho da tabela (entre "Status" e "Obs")
-  const thead = document.getElementById('senhas-thead-row');
-  if (thead) {
-    // Remove colunas extras antigas (se já existirem)
-    thead.querySelectorAll('.th-extra').forEach(th => th.remove());
-    const statusTh = thead.children[4]; // <th>Status</th> é o 5º (índice 4)
-    let anchor = statusTh;
-    EXTRA_ITEMS.forEach(item => {
-      const th = document.createElement('th');
-      th.className = 'th-extra';
-      th.textContent = item.icon;
-      th.title = item.label;
-      anchor.after(th);
-      anchor = th;
-    });
-  }
 }
 
 function renderSenhas() {
@@ -1366,14 +1324,11 @@ function renderSenhas() {
   const st  = document.getElementById('filter-status').value;
   const lt  = document.getElementById('filter-lote').value;
   const catEl = document.getElementById('filter-categoria');
+  const brdEl = document.getElementById('filter-brinde');
+  const preEl = document.getElementById('filter-presente');
   const cat = catEl ? catEl.value : 'all';
-
-  // Lê o valor de cada filtro extra dinâmico (Brinde, Presente, Kilo de Alimento, etc.)
-  const extraFilters = {};
-  EXTRA_ITEMS.forEach(item => {
-    const el = document.getElementById('filter-'+item.key);
-    extraFilters[item.key] = el ? el.value : 'all';
-  });
+  const brd = brdEl ? brdEl.value : 'all';
+  const pre = preEl ? preEl.value : 'all';
 
   let list = db.senhas.filter(s => {
     if (q && !s.senha.includes(q) && !s.lote.toUpperCase().includes(q) && !(s.categoria||'').toUpperCase().includes(q)) return false;
@@ -1381,31 +1336,28 @@ function renderSenhas() {
     if (st==='usada' && !s.usada) return false;
     if (lt!=='all' && s.lote!==lt) return false;
     if (cat!=='all' && (s.categoria||'')!==cat) return false;
-    for (const item of EXTRA_ITEMS) {
-      const f = extraFilters[item.key];
-      if (f==='sim' && !s[item.key]) return false;
-      if (f==='nao' && s[item.key]) return false;
-    }
+    if (brd==='sim' && !s.brinde) return false;
+    if (brd==='nao' && s.brinde) return false;
+    if (pre==='sim' && !s.presente) return false;
+    if (pre==='nao' && s.presente) return false;
     return true;
   });
   const total = list.length;
   const start = senhasPage * PAGE_SIZE;
   const page  = list.slice(start, start + PAGE_SIZE);
-  document.getElementById('senhas-tbody').innerHTML = page.map(s=>{
-    const extraCells = EXTRA_ITEMS.map(item => `<td style="text-align:center">${s[item.key]?item.icon:'—'}</td>`).join('');
-    return `<tr>
+  document.getElementById('senhas-tbody').innerHTML = page.map(s=>`<tr>
     <td><span class="mono">${s.senha}</span></td>
     <td>${s.lote}</td>
     <td>${s.categoria ? `<span class="badge badge-blue" style="font-size:10px">${s.categoria}</span>` : '<span style="color:var(--ink3);font-size:12px">—</span>'}</td>
-    <td>${s.pessoas}</td>
+    <td>${s.pessoas}${(s.pessoasCadastro!=null && s.pessoas!==s.pessoasCadastro) ? `<br><span style="font-size:10px;color:var(--amber)" title="Ajustado pelo operador ${s.pessoasAjustadoPor||''} (cadastrado: ${s.pessoasCadastro})">✏️ cad: ${s.pessoasCadastro}</span>` : ''}</td>
     <td><span class="badge ${s.usada?'badge-green':'badge-blue'}">${s.usada?'Usada':'Livre'}</span></td>
-    ${extraCells}
+    <td style="text-align:center">${s.brinde?'🎁':'—'}</td>
+    <td style="text-align:center">${s.presente?'🎀':'—'}</td>
     <td style="font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(s.obs||'').replace(/"/g,'&quot;')}">${s.obs||'—'}</td>
     <td style="font-size:12px">${s.entrada||'—'}</td>
     <td style="font-size:12px">${s.operador||'—'}</td>
     <td><button class="btn btn-secondary" style="padding:6px 10px;font-size:12px" onclick="showQR('${s.senha}','${((db.config||{}).evento||'Evento').replace(/'/g,'&#39;')}')">QR</button></td>
-  </tr>`;
-  }).join('');
+  </tr>`).join('');
   document.getElementById('senhas-pag').textContent = `Mostrando ${start+1}–${Math.min(start+PAGE_SIZE,total)} de ${total}`;
   document.getElementById('btn-prev').disabled = senhasPage === 0;
   document.getElementById('btn-next').disabled = start+PAGE_SIZE >= total;
@@ -1458,20 +1410,18 @@ function renderHistorico() {
   const el = document.getElementById('historico-list');
   const hist = db.historico || [];
   if (!hist.length) { el.innerHTML='<p style="color:var(--ink3);font-size:13px">Nenhuma entrada registrada.</p>'; return; }
-  el.innerHTML = hist.slice(0,100).map(h=>{
-    const extraIcons = EXTRA_ITEMS.filter(item => h[item.key]).map(item => `<span style="font-size:14px" title="${item.label}">${item.icon}</span>`).join('');
-    return `<div class="hist-item">
+  el.innerHTML = hist.slice(0,100).map(h=>`<div class="hist-item">
     <span class="hist-icon">✅</span>
     <div style="flex:1">
       <div class="hist-code">${h.senha}</div>
       <div class="hist-time">${h.hora}${h.lote?' · '+h.lote:''}${h.categoria?' · <span style="color:var(--accent);font-size:11px">'+h.categoria+'</span>':''}</div>
       ${h.obs?`<div style="font-size:11px;color:var(--ink3);margin-top:2px">📝 ${h.obs}</div>`:''}
     </div>
-    ${extraIcons}
+    ${h.brinde?'<span style="font-size:14px" title="Recebeu brinde">🎁</span>':''}
+    ${h.presente?'<span style="font-size:14px" title="Trouxe presente">🎀</span>':''}
     ${h.op?`<span class="hist-op">👤 ${h.op}</span>`:''}
     <span class="hist-pax">+${h.pax||1} pessoa(s)</span>
-  </div>`;
-  }).join('');
+  </div>`).join('');
 }
 
 // ── QR POPUP ──────────────────────────────────────
@@ -1575,11 +1525,9 @@ function exportJSON() {
 }
 
 function exportCSV() {
-  const extraHeaders = EXTRA_ITEMS.map(item => item.label.replace(/,/g,'')).join(',');
-  let csv = `senha,lote,categoria,pessoas,status,${extraHeaders},obs,entrada,operador\n`;
+  let csv = 'senha,lote,categoria,pessoas,pessoas_cadastrado,ajustado_por,status,brinde,presente,obs,entrada,operador\n';
   db.senhas.forEach(s => {
-    const extraVals = EXTRA_ITEMS.map(item => s[item.key]?'Sim':'Não').join(',');
-    csv += `${s.senha},${s.lote},"${s.categoria||''}",${s.pessoas},${s.usada?'Usada':'Livre'},${extraVals},"${(s.obs||'').replace(/"/g,'""')}","${s.entrada}","${s.operador||''}"\n`;
+    csv += `${s.senha},${s.lote},"${s.categoria||''}",${s.pessoas},${s.pessoasCadastro??s.pessoas},"${s.pessoasAjustadoPor||''}",${s.usada?'Usada':'Livre'},${s.brinde?'Sim':'Não'},${s.presente?'Sim':'Não'},"${(s.obs||'').replace(/"/g,'""')}","${s.entrada}","${s.operador||''}"\n`;
   });
   dlBlob(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}), 'senhas_'+slug()+'.csv');
   showToast('📄 CSV exportado!');
@@ -1653,8 +1601,6 @@ function executarMergeLocal() {
         senhaMap[s.senha].usada    = true;
         senhaMap[s.senha].entrada  = s.entrada;
         senhaMap[s.senha].operador = s.operador;
-        senhaMap[s.senha].obs      = s.obs || '';
-        EXTRA_ITEMS.forEach(item => { senhaMap[s.senha][item.key] = !!s[item.key]; });
       }
     });
     base.senhas = Object.values(senhaMap);
@@ -1725,6 +1671,38 @@ function showToast(msg, isErr) {
   t._t = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
+// ── CACHE BUSTER - Força versão nova mesmo em CDN/cache de celular ──
+(function() {
+  const APP_VERSION = '20260612_002'; // ← atualize este número a cada deploy
+
+  // 1) Desregistra service workers antigos
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      regs.forEach(function(r) { r.unregister(); });
+    });
+  }
+
+  // 2) Limpa Cache API
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      names.forEach(function(n) { caches.delete(n); });
+    });
+  }
+
+  // 3) Força reload via query string se versão mudou
+  //    Isso bypassa o cache da CDN do GitHub Pages no celular
+  const storedVersion = localStorage.getItem('app_version');
+  if (storedVersion !== APP_VERSION) {
+    localStorage.setItem('app_version', APP_VERSION);
+    if (storedVersion !== null) {
+      // Adiciona ?v=VERSÃO na URL para forçar novo request ao servidor
+      const url = new URL(window.location.href);
+      url.searchParams.set('v', APP_VERSION);
+      window.location.replace(url.toString());
+    }
+  }
+})();
+
 // ── INIT ──────────────────────────────────────────
 (function() {
   const s = checkSession();
@@ -1747,5 +1725,15 @@ function showToast(msg, isErr) {
   }
 })();
 </script>
+
+<!-- RODAPÉ -->
+<footer style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);color:rgba(255,255,255,0.7);text-align:center;padding:16px 20px;font-family:'Inter',system-ui,sans-serif;font-size:13px;margin-top:auto;">
+  Desenvolvido por <strong style="color:#fff;">Isawere Sistemas</strong> —
+  <a href="https://www.isawere.com.br/" target="_blank" rel="noopener"
+     style="color:#60a5fa;text-decoration:none;font-weight:600;">
+    Clique aqui e veja outras soluções
+  </a>
+</footer>
+
 </body>
 </html>
