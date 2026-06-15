@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- Cache busting: v20260612_001 -->
+<!-- Cache busting: v20260615_001 -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -328,24 +328,6 @@ tbody tr:last-child td{border-bottom:none;}
         <div class="form-row">
           <div class="form-group"><label>Pessoas por Senha</label><input id="gen-pessoas" type="number" min="1" value="1"></div>
         </div>
-        <div class="form-group">
-          <label>Extras já incluídos neste lote <span style="font-weight:400;color:var(--ink3)">(pré-marcados ao gerar)</span></label>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <label style="flex:1;min-width:140px;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2)">
-              <input type="checkbox" id="gen-brinde" style="width:18px;height:18px;accent-color:var(--green);cursor:pointer">
-              🎁 Recebeu Brinde
-            </label>
-            <label style="flex:1;min-width:140px;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2)">
-              <input type="checkbox" id="gen-presente" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer">
-              🎀 Presente
-            </label>
-            <label style="flex:1;min-width:140px;display:flex;align-items:center;gap:8px;background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink2)">
-              <input type="checkbox" id="gen-alimento" style="width:18px;height:18px;accent-color:var(--amber);cursor:pointer">
-              🍚 Quilo de Alimento
-            </label>
-            <!-- 🔧 ESPAÇO PARA NOVOS EXTRAS (geração): adicionar novo <label><input type="checkbox" id="gen-NOVOEXTRA"> aqui -->
-          </div>
-        </div>
         <div class="alert alert-green" id="gen-alert"></div>
         <button class="btn btn-primary" onclick="gerarSenhas()">✨ Gerar Senhas</button>
       </div>
@@ -364,6 +346,10 @@ tbody tr:last-child td{border-bottom:none;}
             </div>
           </div>
           <button class="btn btn-primary" style="width:100%;font-size:16px;padding:16px" onclick="validarSenha()">✅ Validar Entrada</button>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" style="flex:1;font-size:14px;padding:13px;background:#7c3aed;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer" onclick="entradaEspecial('VIP')">⭐ VIP</button>
+            <button class="btn" style="flex:1;font-size:14px;padding:13px;background:#ea580c;color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer" onclick="entradaEspecial('EXTRA')">➕ EXTRA</button>
+          </div>
           <div class="result-box" id="result-box">
             <span class="result-icon" id="result-icon"></span>
             <div class="result-title" id="result-title"></div>
@@ -395,6 +381,7 @@ tbody tr:last-child td{border-bottom:none;}
                 </label>
                 <!-- 🔧 ESPAÇO PARA NOVOS EXTRAS (validação): adicionar novo <label id="lbl-NOVOEXTRA"><input type="checkbox" id="chk-NOVOEXTRA" onchange="updateExtraLabel('NOVOEXTRA')"> aqui -->
               </div>
+              <div id="lbl-tipo-especial" style="display:none;margin-bottom:10px;padding:10px 14px;border-radius:10px;font-size:14px;font-weight:700;text-align:center"></div>
               <div style="position:relative">
                 <textarea id="val-obs" placeholder="Observações (opcional)..." rows="2"
                   style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;font-family:inherit;outline:none;resize:vertical;transition:border-color .2s"
@@ -1153,11 +1140,9 @@ function gerarSenhas() {
   const pessoas   = parseInt(document.getElementById('gen-pessoas').value) || 1;
   const prefix    = document.getElementById('gen-prefix').value.trim().toUpperCase();
   const categoria = document.getElementById('gen-categoria').value.trim();
-  // Extras pré-marcados para este lote
-  const defBrinde   = document.getElementById('gen-brinde').checked;
-  const defPresente = document.getElementById('gen-presente').checked;
-  const defAlimento = document.getElementById('gen-alimento').checked;
-  // 🔧 ESPAÇO PARA NOVOS EXTRAS (geração): ler o checkbox aqui, ex: const defNOVOEXTRA = document.getElementById('gen-NOVOEXTRA').checked;
+  // Os extras (brinde/presente/alimento) são marcados pelo operador na hora da validação
+  const defBrinde = false, defPresente = false, defAlimento = false;
+  // 🔧 ESPAÇO PARA NOVOS EXTRAS (geração): const defNOVOEXTRA = false;
   if (!lote) { showToast('❌ Informe o nome do lote', true); return; }
   if (qtd < 1 || qtd > 10000) { showToast('❌ Quantidade entre 1 e 10.000', true); return; }
 
@@ -1192,7 +1177,53 @@ function gerarCodigo(len) {
 // ── VALIDAR ───────────────────────────────────────
 let _senhaAtual = null; // referência da senha validada aguardando confirmação extras
 let _pessoasAtual = 1;  // quantidade de pessoas ajustável na validação atual
-let _qrPaused = false;  // true quando o scanner QR está pausado aguardando o operador
+let _qrPaused = false;  // true quando o scanner QR foi parado aguardando o operador
+let _tipoEspecial = ''; // 'VIP', 'EXTRA' ou '' para entradas normais
+
+// Entrada especial sem QR/senha cadastrada (VIP ou EXTRA)
+function entradaEspecial(tipo) {
+  _tipoEspecial = tipo;
+  const box   = document.getElementById('result-box');
+  const icon  = document.getElementById('result-icon');
+  const title = document.getElementById('result-title');
+  const info  = document.getElementById('result-info');
+  const extrasBox = document.getElementById('extras-box');
+
+  const now = new Date().toLocaleString('pt-BR');
+  const senha = tipo + '-' + now.replace(/[^\d]/g,'').slice(6); // ex: VIP-141523
+  const registro = { senha, lote: tipo, categoria: tipo, pessoas: 1, pessoasCadastro: 1, usada: true, entrada: now, operador: currentOperador, brinde: false, presente: false, alimento: false, obs: '', tipoEspecial: tipo };
+  db.senhas.push(registro);
+  db.historico.unshift({ senha, hora: now, pax: 1, lote: tipo, categoria: tipo, op: currentOperador, brinde: false, presente: false, alimento: false, obs: '', tipoEspecial: tipo });
+  sessionValidations++;
+  _senhaAtual = registro;
+
+  box.style.display = 'block';
+  box.className = 'result-box result-ok';
+  icon.textContent = tipo === 'VIP' ? '⭐' : '➕';
+  title.textContent = tipo === 'VIP' ? 'Entrada VIP!' : 'Entrada Extra!';
+  info.textContent  = `${tipo} · ${currentOperador} · ${now}`;
+
+  // Badge colorido dentro do extras-box
+  const badge = document.getElementById('lbl-tipo-especial');
+  badge.style.display = 'block';
+  badge.style.background = tipo === 'VIP' ? '#ede9fe' : '#ffedd5';
+  badge.style.color      = tipo === 'VIP' ? '#6d28d9' : '#c2410c';
+  badge.style.border     = tipo === 'VIP' ? '2px solid #7c3aed' : '2px solid #ea580c';
+  badge.textContent      = tipo === 'VIP' ? '⭐ Entrada VIP — autoridade/convidado especial' : '➕ Entrada Extra — esqueceu o QR Code';
+
+  document.getElementById('chk-brinde').checked   = false;
+  document.getElementById('chk-presente').checked = false;
+  document.getElementById('chk-alimento').checked = false;
+  updateExtraLabel('brinde'); updateExtraLabel('presente'); updateExtraLabel('alimento');
+  document.getElementById('val-obs').value = '';
+  _pessoasAtual = 1;
+  document.getElementById('val-pessoas').textContent = 1;
+  document.getElementById('val-pessoas-cadastrado').textContent = 1;
+  extrasBox.style.display = 'block';
+  document.getElementById('btn-continuar-qr').style.display = 'none';
+  saveDB(); updateOfflineTab();
+  showToast(`${tipo === 'VIP' ? '⭐' : '➕'} Entrada ${tipo} registrada!`);
+}
 
 function validarSenha() {
   const input = document.getElementById('val-input').value.trim().toUpperCase();
@@ -1208,6 +1239,9 @@ function validarSenha() {
   box.style.display = 'block';
   extrasBox.style.display = 'none';
   _senhaAtual = null;
+  _tipoEspecial = '';
+  const badge = document.getElementById('lbl-tipo-especial');
+  if (badge) { badge.style.display = 'none'; badge.textContent = ''; }
 
   if (!s) {
     box.className='result-box result-err'; icon.textContent='❌';
@@ -1279,6 +1313,7 @@ function confirmarExtras() {
     _senhaAtual.brinde   = brinde;
     _senhaAtual.presente = presente;
     _senhaAtual.alimento = alimento;
+    _senhaAtual.tipoEspecial = _tipoEspecial;
     // 🔧 ESPAÇO PARA NOVOS EXTRAS (salvar na senha): _senhaAtual.novoExtra = novoExtra;
     _senhaAtual.obs      = obs;
     _senhaAtual.pessoas  = _pessoasAtual;
@@ -1298,6 +1333,9 @@ function confirmarExtras() {
     if (extras.length) showToast('💾 ' + extras.join(' · '));
   }
   _senhaAtual = null;
+  _tipoEspecial = '';
+  const badge = document.getElementById('lbl-tipo-especial');
+  if (badge) { badge.style.display = 'none'; }
   document.getElementById('extras-box').style.display = 'none';
   document.getElementById('result-box').style.display = 'none';
   document.getElementById('val-input').value = '';
@@ -1308,37 +1346,51 @@ function confirmarExtras() {
 // ── QR ────────────────────────────────────────────
 function startQR() {
   if (!window.Html5Qrcode) { showToast('⚠️ Scanner não disponível offline', true); return; }
-  if (qrScanner) { qrScanner.stop().catch(()=>{}); }
-  _qrPaused = false;
-  document.getElementById('btn-continuar-qr').style.display = 'none';
-  qrScanner = new Html5Qrcode('qr-reader');
-  qrScanner.start({ facingMode: 'environment' },
-    { fps: 10, qrbox: { width: 250, height: 250 } },
-    code => {
-      // Pausa a câmera para dar tempo ao operador de visualizar o resultado
-      if (qrScanner) { try { qrScanner.pause(true); } catch(e) {} }
-      _qrPaused = true;
-      document.getElementById('val-input').value = code.toUpperCase();
-      validarSenha();
-    }, () => {}
-  ).catch(e => showToast('❌ Câmera: ' + e, true));
+  const doStart = () => {
+    _qrPaused = false;
+    document.getElementById('btn-continuar-qr').style.display = 'none';
+    qrScanner = new Html5Qrcode('qr-reader');
+    qrScanner.start(
+      { facingMode: 'environment' },
+      { fps: 10, qrbox: { width: 250, height: 250 } },
+      code => {
+        // Para completamente — garante pausa real em qualquer celular
+        const lido = code.toUpperCase();
+        qrScanner.stop().then(() => { qrScanner.clear(); qrScanner = null; })
+          .catch(() => { qrScanner = null; })
+          .finally(() => {
+            _qrPaused = true;
+            document.getElementById('val-input').value = lido;
+            validarSenha();
+          });
+      },
+      () => {}
+    ).catch(e => showToast('❌ Câmera: ' + e, true));
+  };
+  if (qrScanner) {
+    qrScanner.stop().then(() => { qrScanner.clear(); qrScanner = null; doStart(); }).catch(() => { qrScanner = null; doStart(); });
+  } else {
+    doStart();
+  }
 }
 
 function stopQR() {
   _qrPaused = false;
   document.getElementById('btn-continuar-qr').style.display = 'none';
-  if (qrScanner) { qrScanner.stop().then(()=>{ qrScanner.clear(); qrScanner=null; }).catch(()=>{ qrScanner=null; }); }
+  if (qrScanner) {
+    qrScanner.stop().then(() => { qrScanner.clear(); qrScanner = null; }).catch(() => { qrScanner = null; });
+  }
 }
 
 function resumeQRIfPaused() {
-  if (_qrPaused && qrScanner) {
-    try { qrScanner.resume(); } catch(e) {}
-  }
+  // Scanner foi parado completamente — reinicia para retomar leitura
+  const wasQR = _qrPaused;
   _qrPaused = false;
   document.getElementById('btn-continuar-qr').style.display = 'none';
+  if (wasQR) startQR();
 }
 
-// Botão "Continuar Leitura" — fecha o resultado da leitura QR e retoma a câmera
+// Botão "Continuar Leitura" — fecha resultado e reinicia câmera
 function continuarQR() {
   document.getElementById('result-box').style.display = 'none';
   document.getElementById('val-input').value = '';
@@ -1718,7 +1770,7 @@ function showToast(msg, isErr) {
 
 // ── CACHE BUSTER - Força versão nova mesmo em CDN/cache de celular ──
 (function() {
-  const APP_VERSION = '20260612_002'; // ← atualize este número a cada deploy
+  const APP_VERSION = '20260615_001'; // ← atualize este número a cada deploy
 
   // 1) Desregistra service workers antigos
   if ('serviceWorker' in navigator) {
