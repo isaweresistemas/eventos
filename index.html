@@ -1024,7 +1024,11 @@ let pushPending = false;
 function schedulePush() {
   if (!pushPending) {
     pushPending = true;
-    setTimeout(async () => { await pushToSheets(); pushPending = false; }, 1500);
+    setTimeout(async () => {
+      await pullFromSheets(); // puxa primeiro
+      await pushToSheets();   // depois envia com dados completos
+      pushPending = false;
+    }, 2000);
   }
 }
 
@@ -1050,13 +1054,14 @@ function initSync() {
     pullFromSheets();
     document.getElementById('realtime-ind').style.display = 'inline-flex';
   }
-  syncTimer = setInterval(async () => {
-    const s = checkSession();
-    if (!s) { doLogout(); return; }
+ syncTimer = setInterval(async () => {
+  const s = checkSession();
+  if (!s) { doLogout(); return; }
+  if (!pushPending) {  // só faz pull se não tem push pendente
     await pullFromSheets();
-  }, SYNC_INTERVAL);
+  }
+}, SYNC_INTERVAL);
 }
-
 // ── SYNC UI ─────────────────────────────────────
 function updateSyncBadge(state) {
   const el = document.getElementById('sync-badge');
