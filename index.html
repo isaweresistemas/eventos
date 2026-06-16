@@ -3,10 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- Cache busting: v20260615_002 -->
+<!-- Cache busting: v20260615_003 -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<!-- Cache buster executado ANTES de tudo — força atualização nos celulares -->
+<script>
+(function() {
+  var APP_VERSION = '20260615_003';
+
+  // 1) Desregistra service workers antigos (impedem atualização em PWA)
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(regs) {
+      regs.forEach(function(r) { r.unregister(); });
+    });
+  }
+
+  // 2) Limpa Cache API do browser
+  if ('caches' in window) {
+    caches.keys().then(function(names) {
+      names.forEach(function(n) { caches.delete(n); });
+    });
+  }
+
+  // 3) Compara versão local com a do servidor via fetch sem cache
+  //    Isso funciona mesmo que o HTML principal esteja em cache no celular
+  var stored = localStorage.getItem('app_version');
+  if (stored !== APP_VERSION) {
+    // Versão mudou: salva e recarrega com query string para burlar CDN/cache
+    localStorage.setItem('app_version', APP_VERSION);
+    var url = new URL(window.location.href);
+    url.searchParams.set('v', APP_VERSION);
+    url.searchParams.set('t', Date.now()); // timestamp extra contra cache agressivo
+    window.location.replace(url.toString());
+  } else {
+    // Versão igual no localStorage — mas verifica no servidor em background
+    // para detectar deploy novo ANTES da próxima visita
+    try {
+      fetch(window.location.href + '?probe=' + Date.now(), {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' }
+      }).then(function(r) { return r.text(); })
+        .then(function(html) {
+          // Extrai APP_VERSION do arquivo recém-baixado
+          var m = html.match(/APP_VERSION\s*=\s*'([^']+)'/);
+          if (m && m[1] !== APP_VERSION) {
+            // Servidor tem versão mais nova — recarrega agora
+            localStorage.setItem('app_version', m[1]);
+            var url = new URL(window.location.href);
+            url.searchParams.set('v', m[1]);
+            url.searchParams.set('t', Date.now());
+            window.location.replace(url.toString());
+          }
+        }).catch(function(){});
+    } catch(e) {}
+  }
+})();
+</script>
 <title>Isawere Eventos Pro</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
@@ -1781,38 +1834,6 @@ function showToast(msg, isErr) {
   clearTimeout(t._t);
   t._t = setTimeout(() => t.classList.remove('show'), 3200);
 }
-
-// ── CACHE BUSTER - Força versão nova mesmo em CDN/cache de celular ──
-(function() {
-  const APP_VERSION = '20260615_002'; // ← atualize este número a cada deploy
-
-  // 1) Desregistra service workers antigos
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(regs) {
-      regs.forEach(function(r) { r.unregister(); });
-    });
-  }
-
-  // 2) Limpa Cache API
-  if ('caches' in window) {
-    caches.keys().then(function(names) {
-      names.forEach(function(n) { caches.delete(n); });
-    });
-  }
-
-  // 3) Força reload via query string se versão mudou
-  //    Isso bypassa o cache da CDN do GitHub Pages no celular
-  const storedVersion = localStorage.getItem('app_version');
-  if (storedVersion !== APP_VERSION) {
-    localStorage.setItem('app_version', APP_VERSION);
-    if (storedVersion !== null) {
-      // Adiciona ?v=VERSÃO na URL para forçar novo request ao servidor
-      const url = new URL(window.location.href);
-      url.searchParams.set('v', APP_VERSION);
-      window.location.replace(url.toString());
-    }
-  }
-})();
 
 // ── INIT ──────────────────────────────────────────
 (function() {
