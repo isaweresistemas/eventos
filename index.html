@@ -619,6 +619,7 @@ tbody tr:last-child td{border-bottom:none;}
           <div class="btn-row">
             <button class="btn btn-green" onclick="manualSync()">⬆️ Enviar dados agora</button>
             <button class="btn btn-secondary" onclick="manualPull()">⬇️ Buscar dados agora</button>
+            <button class="btn btn-red" onclick="forceSync()">⚡ Forçar Envio Completo (PC)</button>
           </div>
           <p style="font-size:12px;color:var(--ink3);margin-top:12px">Sincronização automática a cada <strong>10 segundos</strong> quando online. Todos os operadores logados veem os mesmos dados em tempo real.</p>
           <hr style="margin:16px 0;border:none;border-top:1px solid var(--border)">
@@ -943,7 +944,19 @@ async function pushToSheets() {
     return false;
   }
 }
-
+// Adicione esta função no JS do HTML
+async function forceSync() {
+  if (!confirm('Forçar envio completo dos dados do PC para o servidor? Use apenas no PC com os dados completos.')) return;
+  showToast('⚡ Enviando dados completos...');
+  const cfg = loadSheetsCfg();
+  try {
+    const r = await fetchSheets('forcewrite', JSON.stringify(db), 'POST');
+    if (r && r.ok) showToast('✅ Dados completos enviados! ' + db.senhas.length + ' senhas');
+    else showToast('❌ Erro: ' + (r ? r.error : 'desconhecido'), true);
+  } catch(e) {
+    showToast('❌ Sem conexão', true);
+  }
+}
 // ── PULL (buscar dados) ──────────────────────────
 async function pullFromSheets() {
   const cfg = loadSheetsCfg();
