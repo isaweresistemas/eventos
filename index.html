@@ -1607,6 +1607,7 @@ function renderIngressos() {
   document.getElementById('ticket-count').textContent = `${senhas.length} ingressos selecionados`;
   const grid = document.getElementById('ticket-grid');
   grid.innerHTML = '';
+
   senhas.forEach(s => {
     const div = document.createElement('div');
     div.className = 'ticket';
@@ -1617,20 +1618,41 @@ function renderIngressos() {
       <div class="ticket-lote">${s.lote} · ${s.pessoas} pessoa(s)</div>
       ${c.data?`<div style="font-size:10px;color:var(--ink3);margin-top:4px">${new Date(c.data).toLocaleString('pt-BR')}</div>`:''}`;
     grid.appendChild(div);
-    setTimeout(() => {
-      const el = document.getElementById('tqr-'+s.senha);
-      if (el && window.QRCode) { try { new QRCode(el, { text: s.senha, width:96, height:96, colorDark:'#0f172a', colorLight:'#ffffff' }); } catch(e){} }
-    }, 50);
+  });
+
+  // Gera todos os QR Codes de uma vez, sem setTimeout
+  senhas.forEach(s => {
+    const el = document.getElementById('tqr-'+s.senha);
+    if (el && window.QRCode) {
+      try { new QRCode(el, { text: s.senha, width:96, height:96, colorDark:'#0f172a', colorLight:'#ffffff' }); }
+      catch(e){}
+    }
   });
 }
 
 function imprimirIngressos() {
   renderIngressos();
-  const total = document.getElementById('ticket-grid').children.length;
-  const delay = Math.max(1500, total * 8);
-  setTimeout(() => window.print(), delay);
-}
 
+  // Aguarda o navegador processar todas as imagens dos QR Codes
+  const grid = document.getElementById('ticket-grid');
+  const imgs = Array.from(grid.querySelectorAll('img'));
+
+  if (!imgs.length) { setTimeout(() => window.print(), 800); return; }
+
+  let loaded = 0;
+  const tryPrint = () => {
+    loaded++;
+    if (loaded >= imgs.length) window.print();
+  };
+
+  imgs.forEach(img => {
+    if (img.complete) { tryPrint(); }
+    else { img.onload = tryPrint; img.onerror = tryPrint; }
+  });
+
+  // Segurança: se após 5s ainda não imprimiu, imprime mesmo assim
+  setTimeout(() => window.print(), 5000);
+}
 // ── HISTÓRICO ─────────────────────────────────────
 function renderHistorico() {
   const el = document.getElementById('historico-list');
