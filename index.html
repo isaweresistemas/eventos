@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- Cache busting: v20260615_001 -->
+<!-- Cache busting: v20260615_002 -->
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -435,6 +435,14 @@ tbody tr:last-child td{border-bottom:none;}
           <button class="btn btn-secondary" onclick="exportCSV()">📄 CSV</button>
           <button class="btn btn-secondary" onclick="exportJSON()">📦 JSON</button>
         </div>
+        <!-- Paginação SUPERIOR — sempre visível sem precisar rolar a tabela -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+          <div id="senhas-pag-top" style="font-size:13px;color:var(--ink3);font-weight:600"></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary" onclick="prevPage()" id="btn-prev-top" style="padding:10px 18px;font-weight:700;font-size:14px">← Anterior</button>
+            <button class="btn btn-primary"   onclick="nextPage()" id="btn-next-top" style="padding:10px 18px;font-weight:700;font-size:14px">Próxima →</button>
+          </div>
+        </div>
         <div class="table-wrap">
           <table>
             <thead><tr><th>Senha</th><th>Lote</th><th>Categoria</th><th>Pessoas</th><th>Status</th><th>Brinde</th><th>Presente</th><th>Alimento</th><!-- 🔧 NOVO EXTRA: <th>NomeExtra</th> --><th>Obs</th><th>Entrada</th><th>Operador</th><th>QR</th></tr></thead>
@@ -442,10 +450,10 @@ tbody tr:last-child td{border-bottom:none;}
           </table>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px">
-          <div id="senhas-pag" style="font-size:13px;color:var(--ink3)"></div>
+          <div id="senhas-pag" style="font-size:13px;color:var(--ink3);font-weight:600"></div>
           <div style="display:flex;gap:8px">
-            <button class="btn btn-secondary btn-icon" onclick="prevPage()" id="btn-prev">← Anterior</button>
-            <button class="btn btn-secondary btn-icon" onclick="nextPage()" id="btn-next">Próxima →</button>
+            <button class="btn btn-secondary" onclick="prevPage()" id="btn-prev" style="padding:10px 18px;font-weight:700;font-size:14px">← Anterior</button>
+            <button class="btn btn-primary"   onclick="nextPage()" id="btn-next" style="padding:10px 18px;font-weight:700;font-size:14px">Próxima →</button>
           </div>
         </div>
       </div>
@@ -703,7 +711,7 @@ const SESSION_KEY   = 'ISAWERE_SESSION_v4';
 const SHEETS_CFG_KEY= 'ISAWERE_SHEETS_CFG';
 const ADM_PASS      = 'adm123';
 const MAX_BACKUPS   = 20;
-const PAGE_SIZE     = 50;
+const PAGE_SIZE     = 100;
 const SESSION_TTL   = 8 * 60 * 60 * 1000;
 const SYNC_INTERVAL = 10000; // 10s
 
@@ -1451,13 +1459,19 @@ function renderSenhas() {
     <td style="font-size:12px">${s.operador||'—'}</td>
     <td><button class="btn btn-secondary" style="padding:6px 10px;font-size:12px" onclick="showQR('${s.senha}','${((db.config||{}).evento||'Evento').replace(/'/g,'&#39;')}')">QR</button></td>
   </tr>`).join('');
-  document.getElementById('senhas-pag').textContent = `Mostrando ${start+1}–${Math.min(start+PAGE_SIZE,total)} de ${total}`;
-  document.getElementById('btn-prev').disabled = senhasPage === 0;
-  document.getElementById('btn-next').disabled = start+PAGE_SIZE >= total;
+  const pagInfo = `Página ${senhasPage+1} de ${Math.max(1,Math.ceil(total/PAGE_SIZE))} · ${start+1}–${Math.min(start+PAGE_SIZE,total)} de ${total} senhas`;
+  document.getElementById('senhas-pag').textContent     = pagInfo;
+  document.getElementById('senhas-pag-top').textContent = pagInfo;
+  const atFirst = senhasPage === 0;
+  const atLast  = start + PAGE_SIZE >= total;
+  document.getElementById('btn-prev').disabled     = atFirst;
+  document.getElementById('btn-next').disabled     = atLast;
+  document.getElementById('btn-prev-top').disabled = atFirst;
+  document.getElementById('btn-next-top').disabled = atLast;
 }
 
-function prevPage() { if (senhasPage>0) { senhasPage--; renderSenhas(); } }
-function nextPage() { senhasPage++; renderSenhas(); }
+function prevPage() { if (senhasPage>0) { senhasPage--; renderSenhas(); document.getElementById('senhas-tbody').closest('.card').scrollIntoView({behavior:'smooth',block:'start'}); } }
+function nextPage() { senhasPage++; renderSenhas(); document.getElementById('senhas-tbody').closest('.card').scrollIntoView({behavior:'smooth',block:'start'}); }
 
 // ── INGRESSOS ──────────────────────────────────────
 function populatePrintLote() {
@@ -1770,7 +1784,7 @@ function showToast(msg, isErr) {
 
 // ── CACHE BUSTER - Força versão nova mesmo em CDN/cache de celular ──
 (function() {
-  const APP_VERSION = '20260615_001'; // ← atualize este número a cada deploy
+  const APP_VERSION = '20260615_002'; // ← atualize este número a cada deploy
 
   // 1) Desregistra service workers antigos
   if ('serviceWorker' in navigator) {
