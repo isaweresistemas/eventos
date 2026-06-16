@@ -943,27 +943,57 @@ async function pullFromSheets() {
     const remote = r.data;
     if (!remote) { isSyncing=false; syncEnabled=true; updateSyncBadge('online'); return true; }
 
-    if ((remote._v || 0) > (db._v || 0)) {
-      // Merge: manter marcações locais mais recentes
-      const localMap = {};
-      db.senhas.forEach(s => { localMap[s.senha] = s; });
-      (remote.senhas || []).forEach(s => {
-        if (localMap[s.senha] && localMap[s.senha].usada && !s.usada) {
-          s.usada = true;
-          s.entrada = localMap[s.senha].entrada;
-          s.operador = localMap[s.senha].operador;
+    // MERGE SEMPRE — nunca bloqueia por _v
+    // Senhas: índice local para lookup rápido
+    const localMap = {};
+    db.senhas.forEach(s => { localMap[s.senha] = s; });
+
+    // Adiciona senhas do servidor que o celular não tem
+    (remote.senhas || []).forEach(s => {
+      if (!localMap[s.senha]) {
+        // Senha nova vinda do servidor — adiciona
+        db.senhas.push(s);
+        localMap[s.senha] = s;
+      } else {
+        // Senha já existe — preserva marcações locais (validações feitas aqui)
+        const local = localMap[s.senha];
+        if (local.usada && !s.usada) {
+          // Celular validou mas servidor ainda não sabe — mantém local
+          // (não faz nada, local já está certo)
+        } else if (!local.usada && s.usada) {
+          // Servidor tem validação que o celular não tem — aceita
+          local.usada    = s.usada;
+          local.entrada  = s.entrada;
+          local.operador = s.operador;
+          local.brinde   = s.brinde;
+          local.presente = s.presente;
+          local.alimento = s.alimento;
+          local.obs      = s.obs;
+          local.pessoas  = s.pessoas;
         }
-      });
-      // Merge histórico
-      const histSet = new Set((remote.historico||[]).map(h => h.senha+'|'+h.hora));
-      (db.historico||[]).forEach(h => {
-        if (!histSet.has(h.senha+'|'+h.hora)) remote.historico.push(h);
-      });
-      remote.historico.sort((a,b) => (b.hora > a.hora ? 1 : -1));
-      db = remote;
-      safeStorage.set(STORAGE_KEY, JSON.stringify(db));
-      render();
+      }
+    });
+
+    // Merge histórico: une sem duplicatas
+    const histSet = new Set(db.historico.map(h => h.senha + '|' + h.hora));
+    (remote.historico || []).forEach(h => {
+      if (!histSet.has(h.senha + '|' + h.hora)) {
+        db.historico.push(h);
+        histSet.add(h.senha + '|' + h.hora);
+      }
+    });
+    db.historico.sort((a, b) => (b.hora > a.hora ? 1 : -1));
+
+    // Atualiza config se vier do servidor
+    if (remote.config && Object.keys(remote.config).length) {
+      db.config = remote.config;
     }
+
+    // Salva localmente SEM disparar novo push (skipSync=true)
+    // e SEM atualizar _v para não "ganhar" do servidor na próxima comparação
+    safeStorage.set(STORAGE_KEY, JSON.stringify(db));
+    render();
+
     lastSyncTime = new Date();
     isSyncing = false;
     syncEnabled = true;
