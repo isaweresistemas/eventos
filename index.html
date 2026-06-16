@@ -244,8 +244,9 @@ tbody tr:last-child td{border-bottom:none;}
 @media print{
   body *{visibility:hidden;}
   #print-area,#print-area *{visibility:visible;}
-  #print-area{position:fixed;inset:0;padding:16px;}
-  .ticket{border:2px dashed #333;}
+  #print-area{position:absolute;top:0;left:0;width:100%;padding:16px;}
+  .ticket{border:2px dashed #333;break-inside:avoid;page-break-inside:avoid;}
+  .ticket-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
 }
 
 /* MOBILE */
