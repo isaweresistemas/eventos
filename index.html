@@ -1624,7 +1624,12 @@ function renderIngressos() {
   });
 }
 
-function imprimirIngressos() { renderIngressos(); setTimeout(() => window.print(), 600); }
+function imprimirIngressos() {
+  renderIngressos();
+  const total = document.getElementById('ticket-grid').children.length;
+  const delay = Math.max(1500, total * 8);
+  setTimeout(() => window.print(), delay);
+}
 
 // ── HISTÓRICO ─────────────────────────────────────
 function renderHistorico() {
